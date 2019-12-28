@@ -1,1 +1,3 @@
-# otus_java_2019_12
+# Студент:
+Aleksey Makhanov
+MakhanovAA@alfastrah.ru
