@@ -20,9 +20,9 @@
         </developer>
     </developers>
 
-    <modules>
+<!--    <modules>
         <module>L01-maven</module>
-    </modules>
+    </modules>-->
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
