@@ -1,6 +1,7 @@
 package ru.otus.hw.util;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class CustomArrayList<T> implements List<T> {
 
@@ -26,6 +27,14 @@ public class CustomArrayList<T> implements List<T> {
     }
 
     @Override
+    public String toString() {
+        return Arrays.stream(array)
+                .limit(capacityArray)
+                .map(o -> o != null ? o.toString() : null)
+                .collect(Collectors.joining(", "));
+    }
+
+    @Override
     public boolean add(T t) {
         if (capacityArray == array.length){
             array = Arrays.copyOf(array, capacityArray * (int) Math.round(capacityArray * 1.5));
@@ -34,6 +43,34 @@ public class CustomArrayList<T> implements List<T> {
         capacityArray++;
         return true;
     }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public T get(int index) {
+        Objects.checkIndex(index, capacityArray);
+        return (T) array[index];
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public T set(int index, T element) {
+        Objects.checkIndex(index, capacityArray);
+        T oldValue = (T) array[index];
+        array[index] = element;
+        return oldValue;
+    }
+
+
+    @Override
+    public Object[] toArray() {
+        return Arrays.copyOf(array, size());
+    }
+
+    @Override
+    public ListIterator<T> listIterator() {
+        return new ArrayList<T>().listIterator();
+    }
+
 
     @Override
     public int size() {
@@ -55,10 +92,6 @@ public class CustomArrayList<T> implements List<T> {
         return null;
     }
 
-    @Override
-    public Object[] toArray() {
-        return new Object[0];
-    }
 
     @Override
     public <T1> T1[] toArray(T1[] a) {
@@ -100,15 +133,6 @@ public class CustomArrayList<T> implements List<T> {
 
     }
 
-    @Override
-    public T get(int index) {
-        return null;
-    }
-
-    @Override
-    public T set(int index, T element) {
-        return null;
-    }
 
     @Override
     public void add(int index, T element) {
@@ -130,10 +154,6 @@ public class CustomArrayList<T> implements List<T> {
         return 0;
     }
 
-    @Override
-    public ListIterator<T> listIterator() {
-        return null;
-    }
 
     @Override
     public ListIterator<T> listIterator(int index) {
