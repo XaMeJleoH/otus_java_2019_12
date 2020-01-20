@@ -15,12 +15,10 @@ public class CustomArrayList<T> implements List<T> {
     }
 
     public CustomArrayList(int capacityArray) {
-        if (capacityArray > 0){
+        if (capacityArray > 0) {
             array = new Object[capacityArray];
-        } else if (capacityArray == 0){
+        } else if (capacityArray == 0) {
             array = new Object[]{};
-        } else if (capacityArray < 0) {
-            array = new Object[Math.abs(capacityArray)];
         } else {
             throw new IllegalArgumentException();
         }
@@ -36,7 +34,7 @@ public class CustomArrayList<T> implements List<T> {
 
     @Override
     public boolean add(T t) {
-        if (capacityArray == array.length){
+        if (capacityArray == array.length) {
             array = Arrays.copyOf(array, capacityArray * (int) Math.round(capacityArray * 1.5));
         }
         array[capacityArray] = t;
@@ -68,9 +66,8 @@ public class CustomArrayList<T> implements List<T> {
 
     @Override
     public ListIterator<T> listIterator() {
-        return new ArrayList<T>().listIterator();
+        return new CustomArrayListIterator();
     }
-
 
     @Override
     public int size() {
@@ -84,85 +81,143 @@ public class CustomArrayList<T> implements List<T> {
 
     @Override
     public boolean contains(Object o) {
-        return false;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public Iterator<T> iterator() {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
 
     @Override
     public <T1> T1[] toArray(T1[] a) {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public boolean remove(Object o) {
-        return false;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public boolean containsAll(Collection<?> c) {
-        return false;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public boolean addAll(Collection<? extends T> c) {
-        return false;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public boolean addAll(int index, Collection<? extends T> c) {
-        return false;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public boolean removeAll(Collection<?> c) {
-        return false;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public boolean retainAll(Collection<?> c) {
-        return false;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void clear() {
-
+        throw new UnsupportedOperationException();
     }
 
 
     @Override
     public void add(int index, T element) {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public T remove(int index) {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public int indexOf(Object o) {
-        return 0;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public int lastIndexOf(Object o) {
-        return 0;
+        throw new UnsupportedOperationException();
     }
 
 
     @Override
     public ListIterator<T> listIterator(int index) {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public List<T> subList(int fromIndex, int toIndex) {
-        return null;
+        throw new UnsupportedOperationException();
+    }
+
+    private class CustomArrayListIterator implements ListIterator<T> {
+        private int index = 0;
+        private int lastIndex = -1;
+
+        @Override
+        public boolean hasNext() {
+            return index < lastIndex;
+        }
+
+        @Override
+        public T next() {
+            if (index >= capacityArray) {
+                throw new NoSuchElementException();
+            }
+            return get(lastIndex = index++);
+        }
+
+        @Override
+        public boolean hasPrevious() {
+            return index > 0;
+        }
+
+        @Override
+        public T previous() {
+            if (--index < 0) {
+                throw new NoSuchElementException();
+            }
+            return get(lastIndex -= index);
+        }
+
+        @Override
+        public int nextIndex() {
+            return index;
+        }
+
+        @Override
+        public int previousIndex() {
+            return --index;
+        }
+
+
+        @Override
+        public void set(T t) {
+            CustomArrayList.this.set(lastIndex, t);
+        }
+
+        @Override
+        public void add(T t) {
+            throw new UnsupportedOperationException();
+
+        }
+
+        @Override
+        public void remove() {
+            throw new UnsupportedOperationException();
+        }
     }
 
 }
