@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 public class CustomArrayList<T> implements List<T> {
 
     private static final int defCapacity = 5;
+    private static final double incCapacity = 1.5;
 
     private Object[] array;
     private int capacityArray;
@@ -35,7 +36,7 @@ public class CustomArrayList<T> implements List<T> {
     @Override
     public boolean add(T t) {
         if (capacityArray == array.length) {
-            array = Arrays.copyOf(array, capacityArray * (int) Math.round(capacityArray * 1.5));
+            array = Arrays.copyOf(array, capacityArray * (int) Math.round(capacityArray * incCapacity));
         }
         array[capacityArray] = t;
         capacityArray++;
@@ -57,7 +58,6 @@ public class CustomArrayList<T> implements List<T> {
         array[index] = element;
         return oldValue;
     }
-
 
     @Override
     public Object[] toArray() {
