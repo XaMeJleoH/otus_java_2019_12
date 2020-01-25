@@ -11,16 +11,8 @@
         <version>2019-12-SNAPSHOT</version>
     </parent>
 
-
-    <artifactId>hw01-maven</artifactId>
-    <name>hw01-maven</name>
-
-    <dependencies>
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-        </dependency>
-    </dependencies>
+    <artifactId>hw02-custom-array-list</artifactId>
+    <name>hw02-custom-array-list</name>
 
     <packaging>jar</packaging>
 
