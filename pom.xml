@@ -23,6 +23,7 @@
     <modules>
         <module>hw01-maven</module>
         <module>hw02-custom-array-list</module>
+        <module>hw03-garbage-collector</module>
     </modules>
 
     <properties>
@@ -30,7 +31,6 @@
         <maven.compiler.source>13</maven.compiler.source>
         <maven.compiler.target>13</maven.compiler.target>
         <com.google.guava.version>28.1-jre</com.google.guava.version>
-        <!--<my.variable>42</my.variable>-->
     </properties>
 
     <dependencyManagement>
