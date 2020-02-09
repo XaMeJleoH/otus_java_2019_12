@@ -3,23 +3,21 @@ package ru.otus.hw.Utils;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class IoC {
 
     public static ActionInterface createMyClass() {
-        InvocationHandler handler = new DemoInvocationHandler(new ActionImpl());
+        InvocationHandler handler = new customInvocationHandler(new ActionImpl());
         return (ActionInterface) Proxy.newProxyInstance(IoC.class.getClassLoader(),
                 new Class<?>[]{ActionInterface.class}, handler);
     }
 
-    public static class DemoInvocationHandler implements InvocationHandler {
+    public static class customInvocationHandler implements InvocationHandler {
         private final ActionInterface myClass;
-        private List<Method> myMethod;
+        private Set<Method> myMethod;
 
-        DemoInvocationHandler(ActionInterface myClass) {
+        customInvocationHandler(ActionInterface myClass) {
             this.myClass = myClass;
             runMyMethod();
         }
@@ -33,19 +31,10 @@ public class IoC {
         }
 
         private void runMyMethod() {
-            myMethod = new ArrayList<>();
-            Arrays.stream(myClass.getClass().getDeclaredMethods()).forEach(method -> {
-                if (method.getAnnotation(Log.class) != null) {
-                    myMethod.add(method);
-                }
-            });
-        }
-
-        @Override
-        public String toString() {
-            return "DemoInvocationHandler{" +
-                    "myClass=" + myClass +
-                    '}';
+            myMethod = new HashSet<>();
+            Arrays.stream(myClass.getClass().getDeclaredMethods())
+                    .filter(method -> method.getAnnotation(Log.class) != null)
+                    .forEach(myMethod :: add);
         }
     }
 }
