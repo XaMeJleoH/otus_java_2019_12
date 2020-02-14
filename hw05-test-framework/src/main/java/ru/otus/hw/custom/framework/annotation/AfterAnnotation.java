@@ -1,4 +1,4 @@
-package ru.otus.hw.annotation;
+package ru.otus.hw.custom.framework.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
