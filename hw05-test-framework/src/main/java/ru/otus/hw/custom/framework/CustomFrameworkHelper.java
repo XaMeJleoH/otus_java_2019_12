@@ -3,33 +3,32 @@ package ru.otus.hw.custom.framework;
 import ru.otus.hw.custom.framework.annotation.*;
 
 import java.lang.reflect.Method;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
-
-import static ru.otus.hw.custom.framework.CustomFramework.*;
 
 class CustomFrameworkHelper {
 
-    static Map<String, Set<Method>> fillMethodsMap(Method[] declaredMethods) {
+    static CustomFrameworkMethods fillMethods(Method[] declaredMethods) {
 
-        Map<String, Set<Method>> methods = new HashMap<>();
-        methods.put(BEFORE_EACH, new HashSet<>());
-        methods.put(TEST, new HashSet<>());
-        methods.put(AFTER_EACH, new HashSet<>());
+        CustomFrameworkMethods customFrameworkMethods = new CustomFrameworkMethods();
+        Set<Method> beforeSet = new HashSet<>();
+        Set<Method> testSet = new HashSet<>();
+        Set<Method> afterSet = new HashSet<>();
 
         for (Method method : declaredMethods) {
-            if (method.getDeclaredAnnotation(BeforeAnnotation.class) != null) {
-                methods.get(BEFORE_EACH).add(method);
-            } else if (method.getDeclaredAnnotation(TestAnnotation.class) != null) {
-                methods.get(TEST).add(method);
-            } else if (method.getDeclaredAnnotation(AfterAnnotation.class) != null) {
-                methods.get(AFTER_EACH).add(method);
+            if (method.getDeclaredAnnotation(Before.class) != null) {
+                beforeSet.add(method);
+            } else if (method.getDeclaredAnnotation(Test.class) != null) {
+                testSet.add(method);
+            } else if (method.getDeclaredAnnotation(After.class) != null) {
+                afterSet.add(method);
             }
         }
+        customFrameworkMethods.setBeforeMethods(beforeSet);
+        customFrameworkMethods.setTestMethods(testSet);
+        customFrameworkMethods.setAfterMethods(afterSet);
 
-        return methods;
+        return customFrameworkMethods;
     }
 
 
@@ -38,7 +37,7 @@ class CustomFrameworkHelper {
             try {
                 method.invoke(instance);
             } catch (Exception ex) {
-                throw new CustomFrameworkException(ex.getMessage());
+                throw new CustomFrameworkException(ex.getMessage(), ex);
             }
         }
     }

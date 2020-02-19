@@ -1,49 +1,49 @@
 package test;
 
+import ru.otus.hw.custom.framework.CustomFrameworkAssertion;
 import ru.otus.hw.custom.framework.CustomFrameworkException;
-import ru.otus.hw.custom.framework.annotation.AfterAnnotation;
-import ru.otus.hw.custom.framework.annotation.BeforeAnnotation;
-import ru.otus.hw.custom.framework.annotation.TestAnnotation;
-import org.junit.Assert;
+import ru.otus.hw.custom.framework.annotation.After;
+import ru.otus.hw.custom.framework.annotation.Before;
+import ru.otus.hw.custom.framework.annotation.Test;
 
 public class StringTest {
 
-    @BeforeAnnotation
+    @Before
     public static void before() {
         System.out.println("Before ->");
     }
 
-    @TestAnnotation
+    @Test
     public static void showString() {
         System.out.println("> Test create here <");
     }
 
-    @TestAnnotation
+    @Test
     public static void createCustomFault() throws CustomFrameworkException {
         System.out.println(">! Calling custom throw !<");
-        throw new CustomFrameworkException("Custome error is here!");
+        throw new CustomFrameworkException("Custome error is here! ");
     }
 
-    @TestAnnotation
-    public static void checkNumber() {
-        int num = 2;
-        Assert.assertEquals(2, num);
+    @Test
+    public static void checkNumber() throws CustomFrameworkException {
+        int num = 1+1;
+        CustomFrameworkAssertion.integerIsEquals(3, num);
     }
 
-    @TestAnnotation
+    @Test
     public static void divOnNull() throws CustomFrameworkException {
         System.out.println(">! Calling division on Null throw !<");
         int num = 2;
         System.out.println(2/0);
     }
 
-    @TestAnnotation
+    @Test
     public static void showTwoStrings() {
         System.out.println("> First string <");
         System.out.println("> Second string <");
     }
 
-    @AfterAnnotation
+    @After
     public static void after() {
         System.out.println("<- After");
     }
