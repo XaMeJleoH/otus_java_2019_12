@@ -24,6 +24,7 @@
         <module>hw01-maven</module>
         <module>hw02-custom-array-list</module>
         <module>hw03-garbage-collector</module>
+        <module>hw04-log</module>
         <module>hw05-test-framework</module>
     </modules>
 
