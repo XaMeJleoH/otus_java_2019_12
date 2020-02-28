@@ -1,22 +1,21 @@
 package ru.otus.hw.cassette;
 
-public abstract class Cassette {
-    private int sizeCassette = 50;
-    private int currentSize = 20;
-    private String currency;
+import ru.otus.hw.ATMException;
+import ru.otus.hw.Denomination;
 
-    public int put(int pcs) {
-        currentSize = currentSize + pcs;
-        return currentSize;
-    }
+import java.util.List;
 
-    public int pick(int pcs) {
-        currentSize = currentSize - pcs;
-        return currentSize;
-    }
+public interface Cassette {
 
-    public int getSize() {
-        return currentSize;
-    }
+    Denomination denomination();
 
+    int maxSize();
+
+    int currentSize();
+
+    void putCash(int count) throws ATMException;
+
+    List<Denomination> pickCash(int count) throws ATMException;
+
+    boolean isHaveSpace(int count);
 }
