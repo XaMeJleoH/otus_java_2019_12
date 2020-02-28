@@ -1,4 +1,4 @@
-package ru.otus.hw;
+package ru.otus.hw.atm;
 
 public enum Denomination {
 

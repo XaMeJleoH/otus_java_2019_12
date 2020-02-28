@@ -1,6 +1,7 @@
-package ru.otus.hw;
+package ru.otus.hw.atm;
 
 public class ATMException extends Exception {
+
     public ATMException(String errorMessage) {
         super(errorMessage);
     }

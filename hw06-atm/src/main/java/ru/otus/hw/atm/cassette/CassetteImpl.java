@@ -1,7 +1,7 @@
-package ru.otus.hw.cassette;
+package ru.otus.hw.atm.cassette;
 
-import ru.otus.hw.ATMException;
-import ru.otus.hw.Denomination;
+import ru.otus.hw.atm.ATMException;
+import ru.otus.hw.atm.Denomination;
 
 import java.util.ArrayList;
 import java.util.List;
