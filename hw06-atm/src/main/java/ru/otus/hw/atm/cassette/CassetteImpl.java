@@ -24,11 +24,6 @@ public class CassetteImpl implements Cassette {
     }
 
     @Override
-    public int maxSize() {
-        return maxSize;
-    }
-
-    @Override
     public int currentSize() {
         return currentSize;
     }
@@ -44,7 +39,7 @@ public class CassetteImpl implements Cassette {
     @Override
     public List<Denomination> pickCash(int count) throws ATMException {
         if (count > this.currentSize) {
-            throw new ATMException("Cassette isn't have needed "+ count + " denomination. Where denomination is equals= " + denomination.getDenomination());
+            throw new ATMException("Cassette isn't have needed " + count + " denomination. Where denomination is equals= " + denomination.getDenomination());
         }
         List<Denomination> result = new ArrayList<>();
         for (int i = 0; i < count; i++) {
@@ -56,6 +51,6 @@ public class CassetteImpl implements Cassette {
 
     @Override
     public boolean isHaveSpace(int count) {
-        return  maxSize < currentSize + count;
+        return maxSize < currentSize + count;
     }
 }

@@ -9,8 +9,6 @@ public interface Cassette {
 
     Denomination denomination();
 
-    int maxSize();
-
     int currentSize();
 
     void putCash(int count) throws ATMException;
