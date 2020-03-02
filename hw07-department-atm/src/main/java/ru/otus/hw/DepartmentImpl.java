@@ -1,9 +1,9 @@
 package ru.otus.hw;
 
 import ru.otus.hw.atm.ATM;
+import ru.otus.hw.atm.utils.Listener;
 
 import java.util.Collection;
-import java.util.List;
 
 public class DepartmentImpl implements Department{
 
@@ -26,5 +26,15 @@ public class DepartmentImpl implements Department{
     @Override
     public long getBalance() {
         return atmList.stream().mapToLong(ATM::getBalance).sum();
+    }
+
+    @Override
+    public void printBalanceOnScreen() {
+        atmList.forEach(Listener::printBalanceOnScreen);
+    }
+
+    @Override
+    public void resetATM() {
+        atmList.forEach(Listener::resetATM);
     }
 }

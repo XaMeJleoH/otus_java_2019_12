@@ -53,4 +53,9 @@ public class CassetteImpl implements Cassette {
     public boolean isHaveSpace(int count) {
         return maxSize < currentSize + count;
     }
+
+    @Override
+    public int maxSize() {
+        return maxSize;
+    }
 }

@@ -9,4 +9,8 @@ public interface Department {
     boolean removeATM(ATM atm);
 
     long getBalance();
+
+    void printBalanceOnScreen();
+
+    void resetATM();
 }

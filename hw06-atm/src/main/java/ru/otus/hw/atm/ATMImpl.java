@@ -1,6 +1,7 @@
 package ru.otus.hw.atm;
 
 import ru.otus.hw.atm.cassette.Cassette;
+import ru.otus.hw.atm.utils.Memento;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,11 +11,13 @@ import java.util.stream.Collectors;
 
 public class ATMImpl implements ATM {
 
-    private final TreeMap<Denomination, Cassette> cassetteMap;
+    private TreeMap<Denomination, Cassette> cassetteMap;
+    private Memento memento;
 
-    ATMImpl(List<Cassette> cassetteList) {
+    public ATMImpl(List<Cassette> cassetteList) {
         this.cassetteMap = new TreeMap<>((o1, o2) -> o2.getDenomination() - o1.getDenomination());
         cassetteList.forEach(cassette -> this.cassetteMap.put(cassette.denomination(), cassette));
+        memento = new Memento(cassetteMap);
     }
 
     @Override
@@ -68,4 +71,15 @@ public class ATMImpl implements ATM {
                 .mapToLong(cassette -> cassette.currentSize() * cassette.denomination().getDenomination())
                 .sum();
     }
+
+    @Override
+    public void printBalanceOnScreen(){
+        System.out.println(getBalance());
+    }
+
+    @Override
+    public void resetATM() {
+        cassetteMap = memento.getCassettesState();
+    }
+
 }

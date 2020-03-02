@@ -16,4 +16,6 @@ public interface Cassette {
     List<Denomination> pickCash(int count) throws ATMException;
 
     boolean isHaveSpace(int count);
+
+    int maxSize();
 }
