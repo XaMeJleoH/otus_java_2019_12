@@ -26,6 +26,8 @@
         <module>hw03-garbage-collector</module>
         <module>hw04-log</module>
         <module>hw05-test-framework</module>
+        <module>hw06-atm</module>
+        <module>hw07-department-atm</module>
     </modules>
 
     <properties>
