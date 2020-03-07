@@ -1,5 +1,6 @@
 package ru.otus.hw.custom.gson;
 
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Map;
 
@@ -42,8 +43,10 @@ public class CheckClassImpl implements CheckClass {
             return ClassType.PRIMITIVE_BOOLEAN;
         } else if (fieldType.isArray()){
             return ClassType.ARRAY;
+        } else if (LocalDate.class.isAssignableFrom(fieldType)){
+            return ClassType.LOCAL_DATE;
         } else {
-            throw new IllegalArgumentException("Unknown class");
+            return ClassType.OBJECT;
         }
     }
 }

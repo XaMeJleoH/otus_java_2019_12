@@ -6,6 +6,7 @@ import javax.json.JsonObjectBuilder;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Objects;
@@ -124,6 +125,9 @@ public class CustomGsonImpl implements CustomGson {
             case ARRAY:
                 builder.add(fieldName, ArrayBuilder(fieldValue));
                 break;
+            case LOCAL_DATE:
+                builder.add(fieldName, fieldValue.toString());
+                break;
 
             default:
                 builder.add(fieldName, ObjectBuilder(fieldValue));
@@ -186,6 +190,9 @@ public class CustomGsonImpl implements CustomGson {
                 break;
             case ARRAY:
                 builder.add(ArrayBuilder(fieldValue));
+                break;
+            case LOCAL_DATE:
+                builder.add(fieldValue.toString());
                 break;
 
             default:

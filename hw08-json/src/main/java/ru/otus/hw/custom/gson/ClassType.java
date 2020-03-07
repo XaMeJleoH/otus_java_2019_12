@@ -18,5 +18,7 @@ public enum ClassType {
     PRIMITIVE_FLOAT,
     PRIMITIVE_DOUBLE,
     PRIMITIVE_BOOLEAN,
-    ARRAY;
+    ARRAY,
+    LOCAL_DATE,
+    OBJECT;
 }
