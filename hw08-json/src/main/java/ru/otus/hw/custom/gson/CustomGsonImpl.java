@@ -6,10 +6,8 @@ import javax.json.JsonObjectBuilder;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Map;
-import java.util.Objects;
 
 public class CustomGsonImpl implements CustomGson {
 
@@ -69,6 +67,29 @@ public class CustomGsonImpl implements CustomGson {
         return ArrayBuilder(collection.toArray());
     }
 
+    private JsonObjectBuilder LocalDateBuilder(Object object) throws IllegalAccessException {
+        var objectBuilder = Json.createObjectBuilder();
+        var objectClass = object.getClass();
+
+        while (!objectClass.equals(Object.class)) {
+            var fields = objectClass.getDeclaredFields();
+            for (Field field : fields) {
+                if (field.getName().equals("year")
+                        || field.getName().equals("month")
+                        || field.getName().equals("day")) {
+                    field.setAccessible(true);
+                    var fieldValue = field.get(object);
+                    if (fieldValue == null || Modifier.isTransient(field.getModifiers())) {
+                        continue;
+                    }
+                    fillJsonObjectBuilder(objectBuilder, field.getName(), field.getType(), fieldValue);
+                }
+            }
+            objectClass = objectClass.getSuperclass();
+        }
+        return objectBuilder;
+    }
+
     private void fillJsonObjectBuilder(JsonObjectBuilder builder, String fieldName, Class<?> fieldType, Object fieldValue) throws IllegalAccessException {
         switch (checkClass.checkClass(fieldType)) {
             case COLLECTION:
@@ -126,7 +147,7 @@ public class CustomGsonImpl implements CustomGson {
                 builder.add(fieldName, ArrayBuilder(fieldValue));
                 break;
             case LOCAL_DATE:
-                builder.add(fieldName, fieldValue.toString());
+                builder.add(fieldName, LocalDateBuilder(fieldValue));
                 break;
 
             default:
@@ -192,7 +213,7 @@ public class CustomGsonImpl implements CustomGson {
                 builder.add(ArrayBuilder(fieldValue));
                 break;
             case LOCAL_DATE:
-                builder.add(fieldValue.toString());
+                builder.add(LocalDateBuilder(fieldValue));
                 break;
 
             default:

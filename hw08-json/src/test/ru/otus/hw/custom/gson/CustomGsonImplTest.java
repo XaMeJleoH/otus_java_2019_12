@@ -38,8 +38,11 @@ class CustomGsonImplTest {
     @Test
     void toJson() throws IllegalAccessException {
         System.out.println(subject);
-//        System.out.println(gson.toJson(subject));
-        assertEquals(gson.toJson(subject), customGson.toJson(subject));
+        String jsonFromGson = gson.toJson(subject);
+        String jsonFromCustomGson = customGson.toJson(subject);
+        System.out.println("Json from GSON: " + jsonFromGson);
+        System.out.println("Json from Custom GSON: " + jsonFromCustomGson);
+        assertEquals(jsonFromGson, jsonFromCustomGson);
     }
 
     private List<Document> createDocuments() {
