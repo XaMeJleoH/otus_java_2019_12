@@ -1,6 +1,7 @@
 package ru.otus.hw.custom.gson;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.otus.hw.AccessRooms;
@@ -8,10 +9,7 @@ import ru.otus.hw.Document;
 import ru.otus.hw.Subject;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -44,6 +42,23 @@ class CustomGsonImplTest {
         System.out.println("Json from Custom GSON: " + jsonFromCustomGson);
         assertEquals(jsonFromGson, jsonFromCustomGson);
     }
+
+    @Test
+    void toJsonTests() throws IllegalAccessException {
+        Gson gson = new GsonBuilder().serializeNulls().create();
+        assertEquals(gson.toJson((byte) 1), customGson.toJson((byte) 1));
+        assertEquals(gson.toJson((short) 1f), customGson.toJson((short) 1f));
+        assertEquals(gson.toJson(1), customGson.toJson(1));
+        assertEquals(gson.toJson(1L), customGson.toJson(1L));
+        assertEquals(gson.toJson(1f), customGson.toJson(1f));
+        assertEquals(gson.toJson(1d), customGson.toJson(1d));
+        assertEquals(gson.toJson("aaa"), customGson.toJson("aaa"));
+        assertEquals(gson.toJson('a'), customGson.toJson('a'));
+        assertEquals(gson.toJson(new int[]{1, 2, 3}), customGson.toJson(new int[]{1, 2, 3}));
+        assertEquals(gson.toJson(List.of(1, 2, 3)), customGson.toJson(List.of(1, 2, 3)));
+        assertEquals(gson.toJson(Collections.singletonList(1)), customGson.toJson(Collections.singletonList(1)));
+    }
+
 
     private List<Document> createDocuments() {
         List<Document> documents = new ArrayList<>();

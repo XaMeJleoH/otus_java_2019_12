@@ -25,11 +25,11 @@ public class CheckClassImpl implements CheckClass {
             return ClassType.BOOLEAN;
         } else if (Enum.class.isAssignableFrom(fieldType)) {
             return ClassType.ENUM;
-        } else if (byte.class.isAssignableFrom(fieldType)) {
+        } else if (byte.class.isAssignableFrom(fieldType) || Byte.class.isAssignableFrom(fieldType)) {
             return ClassType.PRIMITIVE_BYTE;
-        } else if (char.class.isAssignableFrom(fieldType)) {
+        } else if (char.class.isAssignableFrom(fieldType) || Character.class.isAssignableFrom(fieldType)) {
             return ClassType.PRIMITIVE_CHAR;
-        } else if (short.class.isAssignableFrom(fieldType)) {
+        } else if (short.class.isAssignableFrom(fieldType) || Short.class.isAssignableFrom(fieldType)) {
             return ClassType.PRIMITIVE_SHORT;
         } else if (int.class.isAssignableFrom(fieldType)) {
             return ClassType.PRIMITIVE_INT;

@@ -16,7 +16,12 @@ public class CustomGsonImpl implements CustomGson {
     @Override
     public String toJson(Object object) throws IllegalAccessException {
         if (object != null) {
-            return ObjectBuilder(object).build().toString();
+
+            if (1==1) {
+                return fillJsonBuilder(object);
+            } else {
+                return ObjectBuilder(object).build().toString();
+            }
         }
         throw new IllegalAccessException("Object is null");
     }
@@ -90,7 +95,23 @@ public class CustomGsonImpl implements CustomGson {
         return objectBuilder;
     }
 
-    private void fillJsonObjectBuilder(JsonObjectBuilder builder, String fieldName, Class<?> fieldType, Object fieldValue) throws IllegalAccessException {
+    private JsonArrayBuilder arrayStringBuilder(Object object) throws IllegalAccessException {
+        var arrayBuilder = Json.createArrayBuilder();
+        for (int i = 0; i < Array.getLength(object); i++) {
+            Object value = Array.get(object, i);
+            if (value != null) {
+                fillJsonArrayBuilder(arrayBuilder, value.getClass(), value);
+            } else {
+                arrayBuilder.addNull();
+            }
+        }
+        return arrayBuilder;
+    }
+
+
+
+    private void fillJsonObjectBuilder(JsonObjectBuilder builder, String fieldName, Class<?> fieldType, Object
+            fieldValue) throws IllegalAccessException {
         switch (checkClass.checkClass(fieldType)) {
             case COLLECTION:
                 builder.add(fieldName, ArrayBuilder((Collection) fieldValue));
@@ -156,7 +177,8 @@ public class CustomGsonImpl implements CustomGson {
         }
     }
 
-    private void fillJsonArrayBuilder(JsonArrayBuilder builder, Class<?> fieldType, Object fieldValue) throws IllegalAccessException {
+    private void fillJsonArrayBuilder(JsonArrayBuilder builder, Class<?> fieldType, Object fieldValue) throws
+            IllegalAccessException {
         switch (checkClass.checkClass(fieldType)) {
             case COLLECTION:
                 builder.add(ArrayBuilder((Collection) fieldValue));
@@ -221,5 +243,44 @@ public class CustomGsonImpl implements CustomGson {
                 break;
         }
     }
+
+    private String fillJsonBuilder(Object object) throws IllegalAccessException {
+        switch (checkClass.checkClass(object.getClass())) {
+            case STRING:
+                return Json.createValue((String) object).toString();
+            case INTEGER:
+                return Json.createValue((Integer) object).toString();
+            case LONG:
+                return Json.createValue((Long) object).toString();
+            case FLOAT:
+                return Json.createValue((Float) object).toString();
+            case DOUBLE:
+                return Json.createValue((Double) object).toString();
+            case PRIMITIVE_BYTE:
+                return Json.createValue((byte) object).toString();
+            case PRIMITIVE_CHAR:
+                return Json.createValue(String.valueOf((char) object)).toString();
+            case PRIMITIVE_SHORT:
+                return Json.createValue((short) object).toString();
+            case PRIMITIVE_INT:
+                return Json.createValue((int) object).toString();
+            case PRIMITIVE_LONG:
+                return Json.createValue((long) object).toString();
+            case PRIMITIVE_FLOAT:
+                return Json.createValue((float) object).toString();
+            case PRIMITIVE_DOUBLE:
+                return Json.createValue((double) object).toString();
+            case ARRAY:
+                return arrayStringBuilder(object).build().toString();
+            case COLLECTION:
+                var collection = (Collection) object;
+                return arrayStringBuilder(collection.toArray()).build().toString();
+
+            default:
+                var objectBuilder = ObjectBuilder(object);
+                return objectBuilder.toString();
+        }
+    }
+
 }
 
