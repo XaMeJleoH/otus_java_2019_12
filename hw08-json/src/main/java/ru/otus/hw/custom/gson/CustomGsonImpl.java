@@ -15,15 +15,20 @@ public class CustomGsonImpl implements CustomGson {
 
     @Override
     public String toJson(Object object) throws IllegalAccessException {
-        if (object != null) {
-
-            if (1==1) {
-                return fillJsonBuilder(object);
-            } else {
-                return ObjectBuilder(object).build().toString();
-            }
+        if (object == null) {
+            throw new IllegalAccessException("Object is null");
+        } else if (isPrimitive(object)) {
+            return fillJsonBuilder(object);
+        } else {
+            return ObjectBuilder(object).build().toString();
         }
-        throw new IllegalAccessException("Object is null");
+    }
+
+
+    private boolean isPrimitive(Object object) {
+        Class fieldType = object.getClass();
+        return fieldType.isPrimitive() || Number.class.isAssignableFrom(fieldType) || Character.class.isAssignableFrom(fieldType)
+                || String.class.isAssignableFrom(fieldType) || fieldType.isArray() || Collection.class.isAssignableFrom(fieldType);
     }
 
     private JsonObjectBuilder ObjectBuilder(Object object) throws IllegalAccessException {
@@ -113,6 +118,30 @@ public class CustomGsonImpl implements CustomGson {
     private void fillJsonObjectBuilder(JsonObjectBuilder builder, String fieldName, Class<?> fieldType, Object
             fieldValue) throws IllegalAccessException {
         switch (checkClass.checkClass(fieldType)) {
+            case PRIMITIVE_BYTE:
+                builder.add(fieldName, (byte) fieldValue);
+                break;
+            case PRIMITIVE_CHAR:
+                builder.add(fieldName, (char) fieldValue);
+                break;
+            case PRIMITIVE_SHORT:
+                builder.add(fieldName, (short) fieldValue);
+                break;
+            case PRIMITIVE_INT:
+                builder.add(fieldName, (int) fieldValue);
+                break;
+            case PRIMITIVE_LONG:
+                builder.add(fieldName, (long) fieldValue);
+                break;
+            case PRIMITIVE_FLOAT:
+                builder.add(fieldName, (float) fieldValue);
+                break;
+            case PRIMITIVE_DOUBLE:
+                builder.add(fieldName, (double) fieldValue);
+                break;
+            case PRIMITIVE_BOOLEAN:
+                builder.add(fieldName, (boolean) fieldValue);
+                break;
             case COLLECTION:
                 builder.add(fieldName, ArrayBuilder((Collection) fieldValue));
                 break;
@@ -140,30 +169,6 @@ public class CustomGsonImpl implements CustomGson {
             case ENUM:
                 builder.add(fieldName, fieldValue.toString());
                 break;
-            case PRIMITIVE_BYTE:
-                builder.add(fieldName, (byte) fieldValue);
-                break;
-            case PRIMITIVE_CHAR:
-                builder.add(fieldName, (char) fieldValue);
-                break;
-            case PRIMITIVE_SHORT:
-                builder.add(fieldName, (short) fieldValue);
-                break;
-            case PRIMITIVE_INT:
-                builder.add(fieldName, (int) fieldValue);
-                break;
-            case PRIMITIVE_LONG:
-                builder.add(fieldName, (long) fieldValue);
-                break;
-            case PRIMITIVE_FLOAT:
-                builder.add(fieldName, (float) fieldValue);
-                break;
-            case PRIMITIVE_DOUBLE:
-                builder.add(fieldName, (double) fieldValue);
-                break;
-            case PRIMITIVE_BOOLEAN:
-                builder.add(fieldName, (boolean) fieldValue);
-                break;
             case ARRAY:
                 builder.add(fieldName, ArrayBuilder(fieldValue));
                 break;
@@ -180,6 +185,30 @@ public class CustomGsonImpl implements CustomGson {
     private void fillJsonArrayBuilder(JsonArrayBuilder builder, Class<?> fieldType, Object fieldValue) throws
             IllegalAccessException {
         switch (checkClass.checkClass(fieldType)) {
+            case PRIMITIVE_BYTE:
+                builder.add((byte) fieldValue);
+                break;
+            case PRIMITIVE_CHAR:
+                builder.add((char) fieldValue);
+                break;
+            case PRIMITIVE_SHORT:
+                builder.add((short) fieldValue);
+                break;
+            case PRIMITIVE_INT:
+                builder.add((int) fieldValue);
+                break;
+            case PRIMITIVE_LONG:
+                builder.add((long) fieldValue);
+                break;
+            case PRIMITIVE_FLOAT:
+                builder.add((float) fieldValue);
+                break;
+            case PRIMITIVE_DOUBLE:
+                builder.add((double) fieldValue);
+                break;
+            case PRIMITIVE_BOOLEAN:
+                builder.add((boolean) fieldValue);
+                break;
             case COLLECTION:
                 builder.add(ArrayBuilder((Collection) fieldValue));
                 break;
@@ -207,30 +236,6 @@ public class CustomGsonImpl implements CustomGson {
             case ENUM:
                 builder.add(fieldValue.toString());
                 break;
-            case PRIMITIVE_BYTE:
-                builder.add((byte) fieldValue);
-                break;
-            case PRIMITIVE_CHAR:
-                builder.add((char) fieldValue);
-                break;
-            case PRIMITIVE_SHORT:
-                builder.add((short) fieldValue);
-                break;
-            case PRIMITIVE_INT:
-                builder.add((int) fieldValue);
-                break;
-            case PRIMITIVE_LONG:
-                builder.add((long) fieldValue);
-                break;
-            case PRIMITIVE_FLOAT:
-                builder.add((float) fieldValue);
-                break;
-            case PRIMITIVE_DOUBLE:
-                builder.add((double) fieldValue);
-                break;
-            case PRIMITIVE_BOOLEAN:
-                builder.add((boolean) fieldValue);
-                break;
             case ARRAY:
                 builder.add(ArrayBuilder(fieldValue));
                 break;
@@ -246,16 +251,6 @@ public class CustomGsonImpl implements CustomGson {
 
     private String fillJsonBuilder(Object object) throws IllegalAccessException {
         switch (checkClass.checkClass(object.getClass())) {
-            case STRING:
-                return Json.createValue((String) object).toString();
-            case INTEGER:
-                return Json.createValue((Integer) object).toString();
-            case LONG:
-                return Json.createValue((Long) object).toString();
-            case FLOAT:
-                return Json.createValue((Float) object).toString();
-            case DOUBLE:
-                return Json.createValue((Double) object).toString();
             case PRIMITIVE_BYTE:
                 return Json.createValue((byte) object).toString();
             case PRIMITIVE_CHAR:
@@ -270,6 +265,16 @@ public class CustomGsonImpl implements CustomGson {
                 return Json.createValue((float) object).toString();
             case PRIMITIVE_DOUBLE:
                 return Json.createValue((double) object).toString();
+            case STRING:
+                return Json.createValue((String) object).toString();
+            case INTEGER:
+                return Json.createValue((Integer) object).toString();
+            case LONG:
+                return Json.createValue((Long) object).toString();
+            case FLOAT:
+                return Json.createValue((Float) object).toString();
+            case DOUBLE:
+                return Json.createValue((Double) object).toString();
             case ARRAY:
                 return arrayStringBuilder(object).build().toString();
             case COLLECTION:
