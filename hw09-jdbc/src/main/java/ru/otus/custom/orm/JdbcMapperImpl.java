@@ -1,10 +1,10 @@
 package ru.otus.custom.orm;
 
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import ru.otus.jdbc.DbExecutor;
 import ru.otus.jdbc.sessionmanager.SessionManagerJdbc;
 
+import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.*;
@@ -50,12 +50,27 @@ public class JdbcMapperImpl implements JdbcMapper {
         }
     }
 
-    @SneakyThrows
     @Override
     public <T> T load(long id, Class<T> tClass) {
         Entity entity = entityHelper.serialize(tClass);
-        // TODO: 22.03.2020
-        var result = dbExecutor.selectRecord(getConnection(), getLoadSql(tClass.getName(), entity), id,  null);
+        try {
+            var result = dbExecutor.selectRecord(getConnection(), getLoadSql(tClass.getName(), entity), id, resultSet -> {
+                try {
+                    if (resultSet.next()) {
+                        return entityHelper.deserialize(resultSet, tClass, entity);
+                    }
+                } catch (SQLException | NoSuchMethodException | IllegalAccessException | InvocationTargetException | InstantiationException ex) {
+                    log.error("Error on select. Error message:{}, Error:", ex.getMessage(), ex);
+                }
+                return null;
+            });
+
+            if (result.isPresent()) {
+                return (T) result.get();
+            }
+        } catch (SQLException ex) {
+            log.error("Error on select. Error message:{}, Error:", ex.getMessage(), ex);
+        }
         return null;
     }
 
@@ -83,8 +98,8 @@ public class JdbcMapperImpl implements JdbcMapper {
 
         createSqlMap.put(className,
                 "insert into " + entityValue.getEntity().getName() +
-                "(" + String.join(", ", entityValue.getEntity().getColumnNames()) + ")" +
-                " values (" + "?" + " , ?".repeat(entityValue.getEntity().getColumnNames().size() - 1) + ")");
+                        "(" + String.join(", ", entityValue.getEntity().getColumnNames()) + ")" +
+                        " values (" + "?" + " , ?".repeat(entityValue.getEntity().getColumnNames().size() - 1) + ")");
 
         return createSqlMap.get(className);
     }
@@ -95,9 +110,9 @@ public class JdbcMapperImpl implements JdbcMapper {
         }
 
         loadSqlMap.put(className,
-                "select " + entity.getPrimaryKey() + ", " + String.join(", ",entity.getColumnNames()) +
-                " from " + entity.getName() +
-                " where " + entity.getPrimaryKey() + "  = ?");
+                "select " + entity.getPrimaryKey() + ", " + String.join(", ", entity.getColumnNames()) +
+                        " from " + entity.getName() +
+                        " where " + entity.getPrimaryKey() + "  = ?");
 
         return loadSqlMap.get(className);
     }

@@ -10,5 +10,7 @@ public interface UserDao {
 
   long saveUser(User user);
 
+  void updateUser(User user);
+
   SessionManager getSessionManager();
 }

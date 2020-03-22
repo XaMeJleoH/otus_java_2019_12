@@ -1,16 +1,12 @@
 package ru.otus.jdbc.dao;
 
-
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.Collections;
 import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.otus.core.dao.UserDao;
 import ru.otus.core.dao.UserDaoException;
-import ru.otus.jdbc.DbExecutor;
+import ru.otus.custom.orm.JdbcMapper;
 import ru.otus.core.model.User;
 import ru.otus.core.sessionmanager.SessionManager;
 import ru.otus.jdbc.sessionmanager.SessionManagerJdbc;
@@ -19,27 +15,19 @@ public class UserDaoJdbc implements UserDao {
   private static Logger logger = LoggerFactory.getLogger(UserDaoJdbc.class);
 
   private final SessionManagerJdbc sessionManager;
-  private final DbExecutor<User> dbExecutor;
+  private final JdbcMapper jdbcMapper;
 
-  public UserDaoJdbc(SessionManagerJdbc sessionManager, DbExecutor<User> dbExecutor) {
+  public UserDaoJdbc(SessionManagerJdbc sessionManager, JdbcMapper jdbcMapper) {
     this.sessionManager = sessionManager;
-    this.dbExecutor = dbExecutor;
+    this.jdbcMapper = jdbcMapper;
   }
 
 
   @Override
   public Optional<User> findById(long id) {
     try {
-      return dbExecutor.selectRecord(getConnection(), "select id, name from user where id  = ?", id, resultSet -> {
-        try {
-          if (resultSet.next()) {
-            return new User(resultSet.getLong("id"), resultSet.getString("name"));
-          }
-        } catch (SQLException e) {
-          logger.error(e.getMessage(), e);
-        }
-        return null;
-      });
+      var user = jdbcMapper.load(id, User.class);
+      return Optional.ofNullable(user);
     } catch (Exception e) {
       logger.error(e.getMessage(), e);
     }
@@ -50,7 +38,17 @@ public class UserDaoJdbc implements UserDao {
   @Override
   public long saveUser(User user) {
     try {
-      return dbExecutor.insertRecord(getConnection(), "insert into user(name) values (?)", Collections.singletonList(user.getName()));
+      return jdbcMapper.create(user);
+    } catch (Exception e) {
+      logger.error(e.getMessage(), e);
+      throw new UserDaoException(e);
+    }
+  }
+
+  @Override
+  public void updateUser(User user) {
+    try {
+      jdbcMapper.update(user);
     } catch (Exception e) {
       logger.error(e.getMessage(), e);
       throw new UserDaoException(e);
@@ -60,9 +58,5 @@ public class UserDaoJdbc implements UserDao {
   @Override
   public SessionManager getSessionManager() {
     return sessionManager;
-  }
-
-  private Connection getConnection() {
-    return sessionManager.getCurrentSession().getConnection();
   }
 }
