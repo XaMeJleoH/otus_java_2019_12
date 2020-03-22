@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import ru.otus.custom.orm.Id;
 
+import java.math.BigDecimal;
+
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -12,9 +14,9 @@ public class Account {
     @Id
     private long no;
     private String type;
-    private String rest;
+    private BigDecimal rest;
 
-    public Account(String type, String rest) {
+    public Account(String type, BigDecimal rest) {
         this(0, type, rest);
     }
 
