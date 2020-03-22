@@ -14,13 +14,13 @@ public class EntityHelper {
 
     private final Map<String, Entity> entityMap = new HashMap<>();
 
-    private Entity serialize(Class clazz) {
-        if (entityMap.containsKey(clazz.getName())) {
-            return entityMap.get(clazz.getName());
+    public Entity serialize(Class tClass) {
+        if (entityMap.containsKey(tClass.getName())) {
+            return entityMap.get(tClass.getName());
         }
         String primaryKey = null;
         List<String> columnNames = new ArrayList<>();
-        var fields = clazz.getDeclaredFields();
+        var fields = tClass.getDeclaredFields();
         for (Field f : fields) {
             if (Modifier.isTransient(f.getModifiers())) {
                 continue;
@@ -31,8 +31,8 @@ public class EntityHelper {
             }
             columnNames.add(f.getName());
         }
-        entityMap.put(clazz.getName(), new Entity(primaryKey, clazz.getSimpleName(), columnNames));
-        return entityMap.get(clazz.getName());
+        entityMap.put(tClass.getName(), new Entity(primaryKey, tClass.getSimpleName(), columnNames));
+        return entityMap.get(tClass.getName());
     }
 
     public <T> EntityValue serialize(T objectData) throws NoSuchFieldException, IllegalAccessException {
@@ -51,9 +51,9 @@ public class EntityHelper {
         return new EntityValue(primaryKey, entity, columnValues);
     }
 
-    public <T> T deserialize(ResultSet resultSet, Class<T> clazz, Entity entity) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException, NoSuchFieldException, SQLException {
-        var instance = clazz.getConstructor().newInstance();
-        var fields = clazz.getDeclaredFields();
+    public <T> T deserialize(ResultSet resultSet, Class<T> tClass, Entity entity) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException, SQLException {
+        var instance = tClass.getConstructor().newInstance();
+        var fields = tClass.getDeclaredFields();
         for (Field f : fields) {
             if (entity.getColumnNames().contains(f.getName()) || entity.getPrimaryKey().equals(f.getName())) {
                 f.setAccessible(true);
