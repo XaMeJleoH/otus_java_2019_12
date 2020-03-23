@@ -2,13 +2,17 @@ package ru.otus.core.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Data
+@NoArgsConstructor
 @Entity
 @Table(name = "user")
 public class User {
@@ -24,6 +28,12 @@ public class User {
     @JoinColumn(name = "address_id")
     private Address address;
 
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @Fetch(FetchMode.SELECT)
+    private List<Phone> phones;
+
+
     public User(String name, int age, Address address) {
         this.name = name;
         this.age = age;
@@ -36,8 +46,8 @@ public class User {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", age='" + age + '\'' +
-                ", address=" + address +
-
+                ", address='" + address + '\'' +
+                ", phones=" + phones +
                 '}';
     }
 }
