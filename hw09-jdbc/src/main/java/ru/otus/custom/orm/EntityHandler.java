@@ -12,11 +12,11 @@ import java.util.Map;
 
 public class EntityHandler {
 
-    private final Map<String, EntityMeta> entityMap = new HashMap<>();
+    private final Map<Class, EntityMeta> entityMap = new HashMap<>();
 
     public EntityMeta serialize(Class tClass) {
-        if (entityMap.containsKey(tClass.getName())) {
-            return entityMap.get(tClass.getName());
+        if (entityMap.containsKey(tClass)) {
+            return entityMap.get(tClass);
         }
         String primaryKey = null;
         List<String> columnNames = new ArrayList<>();
@@ -31,8 +31,8 @@ public class EntityHandler {
             }
             columnNames.add(f.getName());
         }
-        entityMap.put(tClass.getName(), new EntityMeta(primaryKey, tClass.getSimpleName(), columnNames));
-        return entityMap.get(tClass.getName());
+        entityMap.put(tClass, new EntityMeta(primaryKey, tClass.getSimpleName(), columnNames));
+        return entityMap.get(tClass);
     }
 
     public <T> EntityMetaValue serialize(T objectData) throws NoSuchFieldException, IllegalAccessException {
