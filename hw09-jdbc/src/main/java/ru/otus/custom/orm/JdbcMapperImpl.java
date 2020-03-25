@@ -17,21 +17,21 @@ public class JdbcMapperImpl implements JdbcMapper {
 
     private final SessionManagerJdbc sessionManager;
     private final DbExecutor dbExecutor;
-    private final EntityHelper entityHelper;
+    private final EntityHandler entityHandler;
 
-    public JdbcMapperImpl(SessionManagerJdbc sessionManager, DbExecutor dbExecutor, EntityHelper entityHelper) {
+    public JdbcMapperImpl(SessionManagerJdbc sessionManager, DbExecutor dbExecutor, EntityHandler entityHandler) {
         this.sessionManager = sessionManager;
         this.dbExecutor = dbExecutor;
-        this.entityHelper = entityHelper;
+        this.entityHandler = entityHandler;
     }
 
     @Override
     public <T> long create(T object) {
         try {
-            EntityValue entityValue = entityHelper.serialize(object);
+            EntityMetaValue entityMetaValue = entityHandler.serialize(object);
             return dbExecutor.insertRecord(getConnection(),
-                    getCreateSql(object.getClass().getName(), entityValue),
-                    entityValue.getColumnValues());
+                    getCreateSql(object.getClass().getName(), entityMetaValue),
+                    entityMetaValue.getColumnValues());
         } catch (NoSuchFieldException | IllegalAccessException | SQLException ex) {
             log.error("Error on create. Error message:{}, Error:", ex.getMessage(), ex);
         }
@@ -41,10 +41,10 @@ public class JdbcMapperImpl implements JdbcMapper {
     @Override
     public <T> void update(T object) {
         try {
-            EntityValue entityValue = entityHelper.serialize(object);
+            EntityMetaValue entityMetaValue = entityHandler.serialize(object);
             dbExecutor.insertRecord(getConnection(),
-                    getUpdateSql(entityValue),
-                    Collections.singletonList(entityValue.getPrimaryKey()));
+                    getUpdateSql(entityMetaValue),
+                    Collections.singletonList(entityMetaValue.getPrimaryKey()));
         } catch (NoSuchFieldException | IllegalAccessException | SQLException ex) {
             log.error("Error on update. Error message:{}, Error:", ex.getMessage(), ex);
         }
@@ -52,12 +52,12 @@ public class JdbcMapperImpl implements JdbcMapper {
 
     @Override
     public <T> T load(long id, Class<T> tClass) {
-        Entity entity = entityHelper.serialize(tClass);
+        EntityMeta entityMeta = entityHandler.serialize(tClass);
         try {
-            var result = dbExecutor.selectRecord(getConnection(), getLoadSql(tClass.getName(), entity), id, resultSet -> {
+            var result = dbExecutor.selectRecord(getConnection(), getLoadSql(tClass.getName(), entityMeta), id, resultSet -> {
                 try {
                     if (resultSet.next()) {
-                        return entityHelper.deserialize(resultSet, tClass, entity);
+                        return entityHandler.deserialize(resultSet, tClass, entityMeta);
                     }
                 } catch (SQLException | NoSuchMethodException | IllegalAccessException | InvocationTargetException | InstantiationException ex) {
                     log.error("Error on select. Error message:{}, Error:", ex.getMessage(), ex);
@@ -75,44 +75,44 @@ public class JdbcMapperImpl implements JdbcMapper {
     }
 
 
-    private String getUpdateSql(EntityValue entityValue) {
-        return "update " + entityValue.getEntity().getName() +
-                " set " + fillSets(entityValue) +
-                " where " + entityValue.getEntity().getPrimaryKey() + " = ?";
+    private String getUpdateSql(EntityMetaValue entityMetaValue) {
+        return "update " + entityMetaValue.getEntityMeta().getName() +
+                " set " + fillSets(entityMetaValue) +
+                " where " + entityMetaValue.getEntityMeta().getPrimaryKey() + " = ?";
     }
 
-    private String fillSets(EntityValue entityValue) {
+    private String fillSets(EntityMetaValue entityMetaValue) {
         List<String> sets = new ArrayList<>();
-        var columnNames = entityValue.getEntity().getColumnNames();
-        var columnValues = entityValue.getColumnValues();
+        var columnNames = entityMetaValue.getEntityMeta().getColumnNames();
+        var columnValues = entityMetaValue.getColumnValues();
         for (int i = 0; i < columnNames.size(); i++) {
             sets.add(columnNames.get(i) + " = '" + columnValues.get(i) + "'");
         }
         return String.join(", ", sets);
     }
 
-    private String getCreateSql(String className, EntityValue entityValue) {
+    private String getCreateSql(String className, EntityMetaValue entityMetaValue) {
         if (createSqlMap.containsKey(className)) {
             return createSqlMap.get(className);
         }
 
         createSqlMap.put(className,
-                "insert into " + entityValue.getEntity().getName() +
-                        "(" + String.join(", ", entityValue.getEntity().getColumnNames()) + ")" +
-                        " values (" + "?" + " , ?".repeat(entityValue.getEntity().getColumnNames().size() - 1) + ")");
+                "insert into " + entityMetaValue.getEntityMeta().getName() +
+                        "(" + String.join(", ", entityMetaValue.getEntityMeta().getColumnNames()) + ")" +
+                        " values (" + "?" + " , ?".repeat(entityMetaValue.getEntityMeta().getColumnNames().size() - 1) + ")");
 
         return createSqlMap.get(className);
     }
 
-    private String getLoadSql(String className, Entity entity) {
+    private String getLoadSql(String className, EntityMeta entityMeta) {
         if (loadSqlMap.containsKey(className)) {
             return loadSqlMap.get(className);
         }
 
         loadSqlMap.put(className,
-                "select " + entity.getPrimaryKey() + ", " + String.join(", ", entity.getColumnNames()) +
-                        " from " + entity.getName() +
-                        " where " + entity.getPrimaryKey() + "  = ?");
+                "select " + entityMeta.getPrimaryKey() + ", " + String.join(", ", entityMeta.getColumnNames()) +
+                        " from " + entityMeta.getName() +
+                        " where " + entityMeta.getPrimaryKey() + "  = ?");
 
         return loadSqlMap.get(className);
     }

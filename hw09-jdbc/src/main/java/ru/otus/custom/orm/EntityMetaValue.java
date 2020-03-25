@@ -6,14 +6,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-class EntityValue {
+class EntityMetaValue {
     private final String primaryKey;
-    private final Entity entity;
+    private final EntityMeta entityMeta;
     private final List<String> columnValues;
 
-    EntityValue(String primaryKey, Entity entity, List<String> columnValues) {
+    EntityMetaValue(String primaryKey, EntityMeta entityMeta, List<String> columnValues) {
         this.primaryKey = primaryKey;
-        this.entity = entity;
+        this.entityMeta = entityMeta;
         this.columnValues = List.copyOf(columnValues != null ? columnValues : new ArrayList<>());
     }
 }

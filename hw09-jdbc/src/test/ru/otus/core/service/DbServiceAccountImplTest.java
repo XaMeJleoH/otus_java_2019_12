@@ -7,7 +7,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.otus.core.dao.AccountDao;
 import ru.otus.core.model.Account;
-import ru.otus.custom.orm.EntityHelper;
+import ru.otus.custom.orm.EntityHandler;
 import ru.otus.custom.orm.JdbcMapperImpl;
 import ru.otus.h2.DataSourceH2;
 import ru.otus.jdbc.DbExecutor;
@@ -37,7 +37,7 @@ class DbServiceAccountImplTest {
     void setUp() throws SQLException {
         createTable(dataSource);
         SessionManagerJdbc sessionManager = new SessionManagerJdbc(dataSource);
-        AccountDao accountDao = new AccountDaoJdbc(sessionManager, new JdbcMapperImpl(sessionManager, new DbExecutor(), new EntityHelper()));
+        AccountDao accountDao = new AccountDaoJdbc(sessionManager, new JdbcMapperImpl(sessionManager, new DbExecutor(), new EntityHandler()));
         dbServiceAccount = new DbServiceAccountImpl(accountDao);
     }
 

@@ -7,7 +7,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.otus.core.dao.UserDao;
 import ru.otus.core.model.User;
-import ru.otus.custom.orm.EntityHelper;
+import ru.otus.custom.orm.EntityHandler;
 import ru.otus.custom.orm.JdbcMapperImpl;
 import ru.otus.h2.DataSourceH2;
 import ru.otus.jdbc.DbExecutor;
@@ -37,7 +37,7 @@ class DbServiceUserImplTest {
     void setUp() throws SQLException {
         createTable(dataSource);
         SessionManagerJdbc sessionManager = new SessionManagerJdbc(dataSource);
-        UserDao userDao = new UserDaoJdbc(sessionManager, new JdbcMapperImpl(sessionManager, new DbExecutor(), new EntityHelper()));
+        UserDao userDao = new UserDaoJdbc(sessionManager, new JdbcMapperImpl(sessionManager, new DbExecutor(), new EntityHandler()));
         dbServiceUser = new DbServiceUserImpl(userDao);
     }
 
