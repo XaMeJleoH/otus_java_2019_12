@@ -9,9 +9,9 @@ import java.util.List;
 class EntityMetaValue {
     private final String primaryKey;
     private final EntityMeta entityMeta;
-    private final List<String> columnValues;
+    private final List<Object> columnValues;
 
-    EntityMetaValue(String primaryKey, EntityMeta entityMeta, List<String> columnValues) {
+    EntityMetaValue(String primaryKey, EntityMeta entityMeta, List<Object> columnValues) {
         this.primaryKey = primaryKey;
         this.entityMeta = entityMeta;
         this.columnValues = List.copyOf(columnValues != null ? columnValues : new ArrayList<>());

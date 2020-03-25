@@ -38,12 +38,13 @@ public class EntityHandler {
     public <T> EntityMetaValue serialize(T objectData) throws NoSuchFieldException, IllegalAccessException {
         Class<?> aClass = objectData.getClass();
         EntityMeta entityMeta = serialize(aClass);
-        List<String> columnValues = new ArrayList<>();
+        List<Object> columnValues = new ArrayList<>();
         String primaryKey;
         for (String fName : entityMeta.getColumnNames()) {
             var f = aClass.getDeclaredField(fName);
             f.setAccessible(true);
-            columnValues.add(f.get(objectData).toString());
+            columnValues.add(f.get(objectData));
+
         }
         var primaryKeyField = aClass.getDeclaredField(entityMeta.getPrimaryKey());
         primaryKeyField.setAccessible(true);
