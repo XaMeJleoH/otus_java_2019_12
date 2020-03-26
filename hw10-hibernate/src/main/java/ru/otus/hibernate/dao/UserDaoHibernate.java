@@ -52,9 +52,27 @@ public class UserDaoHibernate implements UserDao {
     }
   }
 
+
+  @Override
+  public void deleteUser(User user) {
+    var currentSession = sessionManager.getCurrentSession();
+    try {
+      currentSession.getHibernateSession().delete(user);
+    } catch (Exception e) {
+      logger.error(e.getMessage(), e);
+      throw new UserDaoException(e);
+    }
+  }
+
   @Override
   public void updateUser(User user) {
-
+    var currentSession = sessionManager.getCurrentSession();
+    try {
+      currentSession.getHibernateSession().update(user);
+    } catch (Exception e) {
+      logger.error(e.getMessage(), e);
+      throw new UserDaoException(e);
+    }
   }
 
   @Override

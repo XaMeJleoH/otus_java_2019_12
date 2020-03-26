@@ -12,5 +12,7 @@ public interface UserDao {
 
   void updateUser(User user);
 
+  void deleteUser(User user);
+
   SessionManager getSessionManager();
 }

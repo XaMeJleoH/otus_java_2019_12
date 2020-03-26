@@ -12,4 +12,6 @@ public interface DBServiceUser {
 
   void updateUser(User user);
 
+  void deleteUser(User user);
+
 }
