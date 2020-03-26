@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import ru.otus.jdbc.DbExecutor;
 import ru.otus.jdbc.sessionmanager.SessionManagerJdbc;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -86,7 +87,7 @@ public class JdbcMapperImpl implements JdbcMapper {
         var columnNames = entityMetaValue.getEntityMeta().getColumnNames();
         var columnValues = entityMetaValue.getColumnValues();
         for (int i = 0; i < columnNames.size(); i++) {
-            sets.add(columnNames.get(i) + " = '" + columnValues.get(i) + "'");
+            sets.add(columnNames.get(i).getName() + " = '" + columnValues.get(i) + "'");
         }
         return String.join(", ", sets);
     }
@@ -98,7 +99,7 @@ public class JdbcMapperImpl implements JdbcMapper {
 
         createSqlMap.put(className,
                 "insert into " + entityMetaValue.getEntityMeta().getName() +
-                        "(" + String.join(", ", entityMetaValue.getEntityMeta().getColumnNames()) + ")" +
+                        "(" + convertFieldToSQLString(entityMetaValue.getEntityMeta().getColumnNames()) + ")" +
                         " values (" + "?" + " , ?".repeat(entityMetaValue.getEntityMeta().getColumnNames().size() - 1) + ")");
 
         return createSqlMap.get(className);
@@ -110,7 +111,7 @@ public class JdbcMapperImpl implements JdbcMapper {
         }
 
         loadSqlMap.put(className,
-                "select " + entityMeta.getPrimaryKey() + ", " + String.join(", ", entityMeta.getColumnNames()) +
+                "select " + entityMeta.getPrimaryKey() + ", " + convertFieldToSQLString(entityMeta.getColumnNames()) +
                         " from " + entityMeta.getName() +
                         " where " + entityMeta.getPrimaryKey() + "  = ?");
 
@@ -120,4 +121,13 @@ public class JdbcMapperImpl implements JdbcMapper {
     private Connection getConnection() {
         return sessionManager.getCurrentSession().getConnection();
     }
+
+    private String convertFieldToSQLString(List<Field> fields) {
+        List<String> sqlSet = new ArrayList<>();
+        for (Field field : fields) {
+            sqlSet.add(field.getName());
+        }
+        return String.join(", ", sqlSet);
+    }
+
 }

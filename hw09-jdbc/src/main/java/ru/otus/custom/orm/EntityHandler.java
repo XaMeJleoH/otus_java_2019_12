@@ -19,7 +19,7 @@ public class EntityHandler {
             return entityMap.get(tClass);
         }
         String primaryKey = null;
-        List<String> columnNames = new ArrayList<>();
+        List<Field> columnNames = new ArrayList<>();
         var fields = tClass.getDeclaredFields();
         for (Field f : fields) {
             if (Modifier.isTransient(f.getModifiers())) {
@@ -29,7 +29,7 @@ public class EntityHandler {
                 primaryKey = f.getName();
                 continue;
             }
-            columnNames.add(f.getName());
+            columnNames.add(f);
         }
         entityMap.put(tClass, new EntityMeta(primaryKey, tClass.getSimpleName(), columnNames));
         return entityMap.get(tClass);
@@ -40,8 +40,8 @@ public class EntityHandler {
         EntityMeta entityMeta = serialize(aClass);
         List<Object> columnValues = new ArrayList<>();
         String primaryKey;
-        for (String fName : entityMeta.getColumnNames()) {
-            var f = aClass.getDeclaredField(fName);
+        for (Field field : entityMeta.getColumnNames()) {
+            var f = aClass.getDeclaredField(field.getName());
             f.setAccessible(true);
             columnValues.add(f.get(objectData));
 
@@ -56,7 +56,7 @@ public class EntityHandler {
         var instance = tClass.getConstructor().newInstance();
         var fields = tClass.getDeclaredFields();
         for (Field f : fields) {
-            if (entityMeta.getColumnNames().contains(f.getName()) || entityMeta.getPrimaryKey().equals(f.getName())) {
+            if (entityMeta.getColumnNames().contains(f) || entityMeta.getPrimaryKey().equals(f.getName())) {
                 f.setAccessible(true);
                 f.set(instance, resultSet.getObject(f.getName()));
             }
