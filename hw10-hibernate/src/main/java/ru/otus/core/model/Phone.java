@@ -18,7 +18,7 @@ public class Phone {
     @Column(name = "id")
     private long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     @Fetch(FetchMode.SELECT)
     private User user;
@@ -31,7 +31,7 @@ public class Phone {
 
     @Override
     public String toString() {
-        return "Address{" +
+        return "Phone{" +
                 "id=" + id +
                 ", number=" + number +
                 '}';

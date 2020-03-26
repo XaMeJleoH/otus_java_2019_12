@@ -43,7 +43,7 @@ public class DbServiceDemo {
         Phone phonePenny = new Phone();
         phonePenny.setUser(sheldon);
         phonePenny.setNumber("993333 33");
-        phones.add(phoneHome);
+        phones.add(phonePenny);
 
         sheldon.setPhones(phones);
 
