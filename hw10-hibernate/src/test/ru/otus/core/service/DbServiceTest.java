@@ -49,6 +49,7 @@ class DbServiceTest {
         assertThat(returnedSheldon).isNotNull().hasFieldOrPropertyWithValue("name", sheldon.getName());
         assertThat(returnedSheldon).isNotNull().hasFieldOrPropertyWithValue("age", sheldon.getAge());
         assertThat(returnedSheldon.getAddress()).isNotNull().hasFieldOrPropertyWithValue("street", sheldon.getAddress().getStreet());
+        assertEquals(3, returnedSheldon.getPhones().size());
 
 
         dbServiceUser.deleteUser(returnedSheldon);
@@ -71,9 +72,11 @@ class DbServiceTest {
         assertThat(returnedSheldon).isNotNull().hasFieldOrPropertyWithValue("name", sheldon.getName());
         assertThat(returnedSheldon).isNotNull().hasFieldOrPropertyWithValue("age", sheldon.getAge());
         assertThat(returnedSheldon.getAddress()).isNotNull().hasFieldOrPropertyWithValue("street", sheldon.getAddress().getStreet());
+        assertEquals(3, returnedSheldon.getPhones().size());
 
         returnedSheldon.setName("Shredinger");
         returnedSheldon.getAddress().setStreet("Box");
+        returnedSheldon.getPhones().add(getAdditionalPhone(returnedSheldon));
         dbServiceUser.updateUser(returnedSheldon);
         Optional<User> mayBeCreatedShredinger = dbServiceUser.getUser(id);
         System.out.println(mayBeCreatedShredinger);
@@ -83,6 +86,7 @@ class DbServiceTest {
         assertThat(returnedShredinger).isNotNull().hasFieldOrPropertyWithValue("name", returnedShredinger.getName());
         assertThat(returnedShredinger).isNotNull().hasFieldOrPropertyWithValue("age", returnedShredinger.getAge());
         assertThat(returnedShredinger.getAddress()).isNotNull().hasFieldOrPropertyWithValue("street", returnedShredinger.getAddress().getStreet());
+        assertEquals(4, returnedSheldon.getPhones().size());
 
         dbServiceUser.deleteUser(returnedShredinger);
         Optional<User> voidShredinger = dbServiceUser.getUser(id);
@@ -110,6 +114,13 @@ class DbServiceTest {
 
         sheldon.setPhones(phones);
         return sheldon;
+    }
+
+    private Phone getAdditionalPhone(User user) {
+        Phone additionalPhone = new Phone();
+        additionalPhone.setUser(user);
+        additionalPhone.setNumber("bazinga");
+        return additionalPhone;
     }
 
 }
