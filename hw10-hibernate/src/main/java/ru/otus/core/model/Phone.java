@@ -1,12 +1,12 @@
 package ru.otus.core.model;
 
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
+import java.util.UUID;
 
 @Data
 @NoArgsConstructor
@@ -14,9 +14,9 @@ import javax.persistence.*;
 @Table(name = "phone")
 public class Phone {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "id")
-    private long id;
+    @GeneratedValue
+    @Column(name = "uuid")
+    private UUID uuid;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
@@ -32,7 +32,7 @@ public class Phone {
     @Override
     public String toString() {
         return "Phone{" +
-                "id=" + id +
+                "uuid=" + uuid +
                 ", number=" + number +
                 '}';
     }
