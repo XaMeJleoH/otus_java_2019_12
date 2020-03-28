@@ -15,8 +15,8 @@ import java.util.UUID;
 public class Phone {
     @Id
     @GeneratedValue
-    @Column(name = "uuid")
-    private UUID uuid;
+    @Column(name = "id")
+    private UUID id;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
@@ -32,7 +32,7 @@ public class Phone {
     @Override
     public String toString() {
         return "Phone{" +
-                "uuid=" + uuid +
+                "id=" + id +
                 ", number=" + number +
                 '}';
     }
