@@ -14,7 +14,7 @@ public class EntityHandler {
 
     private final Map<Class<?>, EntityMeta> entityMap = new HashMap<>();
 
-    public EntityMeta serialize(Class<?> tClass) {
+    EntityMeta serialize(Class<?> tClass) {
         if (entityMap.containsKey(tClass)) {
             return entityMap.get(tClass);
         }
@@ -35,7 +35,7 @@ public class EntityHandler {
         return entityMap.get(tClass);
     }
 
-    public <T> EntityMetaValue serialize(T objectData) throws NoSuchFieldException, IllegalAccessException {
+    <T> EntityMetaValue serialize(T objectData) throws NoSuchFieldException, IllegalAccessException {
         Class<?> aClass = objectData.getClass();
         EntityMeta entityMeta = serialize(aClass);
         List<Object> columnValues = new ArrayList<>();
@@ -50,7 +50,7 @@ public class EntityHandler {
         return new EntityMetaValue(primaryKey, entityMeta, columnValues);
     }
 
-    public <T> T deserialize(ResultSet resultSet, Class<T> tClass, EntityMeta entityMeta) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException, SQLException {
+    <T> T deserialize(ResultSet resultSet, Class<T> tClass, EntityMeta entityMeta) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException, SQLException {
         var instance = tClass.getConstructor().newInstance();
         var fields = tClass.getDeclaredFields();
         for (Field f : fields) {
