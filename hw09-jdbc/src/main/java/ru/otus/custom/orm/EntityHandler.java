@@ -12,9 +12,9 @@ import java.util.Map;
 
 public class EntityHandler {
 
-    private final Map<Class, EntityMeta> entityMap = new HashMap<>();
+    private final Map<Class<?>, EntityMeta> entityMap = new HashMap<>();
 
-    public EntityMeta serialize(Class tClass) {
+    public EntityMeta serialize(Class<?> tClass) {
         if (entityMap.containsKey(tClass)) {
             return entityMap.get(tClass);
         }
@@ -40,11 +40,9 @@ public class EntityHandler {
         EntityMeta entityMeta = serialize(aClass);
         List<Object> columnValues = new ArrayList<>();
         String primaryKey;
-        for (Field field : entityMeta.getColumnNames()) {
-            var f = aClass.getDeclaredField(field.getName());
-            f.setAccessible(true);
-            columnValues.add(f.get(objectData));
-
+        for (Field field : entityMeta.getFields()) {
+            field.setAccessible(true);
+            columnValues.add(field.get(objectData));
         }
         var primaryKeyField = aClass.getDeclaredField(entityMeta.getPrimaryKey());
         primaryKeyField.setAccessible(true);
@@ -56,7 +54,7 @@ public class EntityHandler {
         var instance = tClass.getConstructor().newInstance();
         var fields = tClass.getDeclaredFields();
         for (Field f : fields) {
-            if (entityMeta.getColumnNames().contains(f) || entityMeta.getPrimaryKey().equals(f.getName())) {
+            if (entityMeta.getFields().contains(f) || entityMeta.getPrimaryKey().equals(f.getName())) {
                 f.setAccessible(true);
                 f.set(instance, resultSet.getObject(f.getName()));
             }

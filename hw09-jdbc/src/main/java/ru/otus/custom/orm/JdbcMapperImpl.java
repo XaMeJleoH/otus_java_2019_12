@@ -84,7 +84,7 @@ public class JdbcMapperImpl implements JdbcMapper {
 
     private String fillSets(EntityMetaValue entityMetaValue) {
         List<String> sets = new ArrayList<>();
-        var columnNames = entityMetaValue.getEntityMeta().getColumnNames();
+        var columnNames = entityMetaValue.getEntityMeta().getFields();
         var columnValues = entityMetaValue.getColumnValues();
         for (int i = 0; i < columnNames.size(); i++) {
             sets.add(columnNames.get(i).getName() + " = '" + columnValues.get(i) + "'");
@@ -99,8 +99,8 @@ public class JdbcMapperImpl implements JdbcMapper {
 
         createSqlMap.put(className,
                 "insert into " + entityMetaValue.getEntityMeta().getName() +
-                        "(" + convertFieldToSQLString(entityMetaValue.getEntityMeta().getColumnNames()) + ")" +
-                        " values (" + "?" + " , ?".repeat(entityMetaValue.getEntityMeta().getColumnNames().size() - 1) + ")");
+                        "(" + convertFieldToSQLString(entityMetaValue.getEntityMeta().getFields()) + ")" +
+                        " values (" + "?" + " , ?".repeat(entityMetaValue.getEntityMeta().getFields().size() - 1) + ")");
 
         return createSqlMap.get(className);
     }
@@ -111,7 +111,7 @@ public class JdbcMapperImpl implements JdbcMapper {
         }
 
         loadSqlMap.put(className,
-                "select " + entityMeta.getPrimaryKey() + ", " + convertFieldToSQLString(entityMeta.getColumnNames()) +
+                "select " + entityMeta.getPrimaryKey() + ", " + convertFieldToSQLString(entityMeta.getFields()) +
                         " from " + entityMeta.getName() +
                         " where " + entityMeta.getPrimaryKey() + "  = ?");
 

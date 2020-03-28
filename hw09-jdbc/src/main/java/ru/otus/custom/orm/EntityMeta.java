@@ -10,11 +10,11 @@ import java.util.List;
 class EntityMeta {
     private final String primaryKey;
     private final String name;
-    private final List<Field> columnNames;
+    private final List<Field> fields;
 
-    EntityMeta(String primaryKey, String name, List<Field> columnNames) {
+    EntityMeta(String primaryKey, String name, List<Field> fields) {
         this.primaryKey = primaryKey;
         this.name = name;
-        this.columnNames = List.copyOf(columnNames != null ? columnNames : new ArrayList<>());
+        this.fields = List.copyOf(fields != null ? fields : new ArrayList<>());
     }
 }
