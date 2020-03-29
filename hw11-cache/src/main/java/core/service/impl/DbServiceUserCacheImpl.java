@@ -1,9 +1,13 @@
-package ru.otus.core.service;
+package core.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import ru.otus.core.dao.UserDao;
 import ru.otus.core.model.User;
+import ru.otus.core.service.DBServiceUser;
+import ru.otus.core.service.DbServiceException;
 import ru.otus.core.sessionmanager.SessionManager;
+import ru.otus.hw.cache.HwCache;
+import ru.otus.hw.cache.HwListener;
 
 import java.util.Optional;
 
@@ -11,45 +15,54 @@ import java.util.Optional;
 public class DbServiceUserCacheImpl implements DBServiceUser {
 
     private final UserDao userDao;
+    private final HwCache<Long, User> cache;
 
-    public DbServiceUserCacheImpl(UserDao userDao) {
+    public DbServiceUserCacheImpl(UserDao userDao, HwCache<Long, User> cache) {
         this.userDao = userDao;
+        this.cache = cache;
+        HwListener<Long, User> listener = (key, value, action) -> log.info("key:{}, value:{}, action: {}", key, value, action);
+        cache.addListener(listener);
     }
 
     @Override
     public long saveUser(User user) {
+        Long userId;
         try (SessionManager sessionManager = userDao.getSessionManager()) {
             sessionManager.beginSession();
             try {
-                long userId = userDao.saveUser(user);
+                userId = userDao.saveUser(user);
                 sessionManager.commitSession();
-
                 log.info("created user: {}", userId);
-                return userId;
             } catch (Exception e) {
                 log.error(e.getMessage(), e);
                 sessionManager.rollbackSession();
                 throw new DbServiceException(e);
             }
         }
+        cache.remove(userId);
+        return userId;
     }
 
 
     @Override
     public Optional<User> getUser(long id) {
-        try (SessionManager sessionManager = userDao.getSessionManager()) {
-            sessionManager.beginSession();
-            try {
-                Optional<User> userOptional = userDao.findById(id);
-
-                log.info("user: {}", userOptional.orElse(null));
-                return userOptional;
-            } catch (Exception e) {
-                log.error(e.getMessage(), e);
-                sessionManager.rollbackSession();
+        Optional<User> userOptional = Optional.ofNullable(cache.get(id));
+        if (userOptional.isEmpty()) {
+            try (SessionManager sessionManager = userDao.getSessionManager()) {
+                sessionManager.beginSession();
+                try {
+                    userOptional = userDao.findById(id);
+                    log.info("user: {}", userOptional.orElse(null));
+                } catch (Exception e) {
+                    if (log != null) {
+                        log.error(e.getMessage(), e);
+                    }
+                    sessionManager.rollbackSession();
+                }
             }
-            return Optional.empty();
         }
+        userOptional.ifPresentOrElse(user -> cache.put(id, user), () -> cache.remove(id));
+        return userOptional;
     }
 
     @Override
@@ -66,6 +79,7 @@ public class DbServiceUserCacheImpl implements DBServiceUser {
                 throw new DbServiceException(e);
             }
         }
+        cache.remove(user.getId());
     }
 
     @Override
@@ -82,6 +96,7 @@ public class DbServiceUserCacheImpl implements DBServiceUser {
                 throw new DbServiceException(e);
             }
         }
+        cache.remove(user.getId());
     }
 
 }
