@@ -33,7 +33,7 @@ public class JdbcMapperImpl implements JdbcMapper {
             return dbExecutor.insertRecord(getConnection(),
                     getCreateSql(object.getClass().getName(), entityMetaValue),
                     entityMetaValue.getColumnValues());
-        } catch (NoSuchFieldException | IllegalAccessException | SQLException ex) {
+        } catch (IllegalAccessException | SQLException ex) {
             log.error("Error on create. Error message:{}, Error:", ex.getMessage(), ex);
         }
         return -1;
@@ -46,7 +46,7 @@ public class JdbcMapperImpl implements JdbcMapper {
             dbExecutor.insertRecord(getConnection(),
                     getUpdateSql(entityMetaValue),
                     Collections.singletonList(entityMetaValue.getPrimaryKey()));
-        } catch (NoSuchFieldException | IllegalAccessException | SQLException ex) {
+        } catch (IllegalAccessException | SQLException ex) {
             log.error("Error on update. Error message:{}, Error:", ex.getMessage(), ex);
         }
     }
@@ -58,9 +58,9 @@ public class JdbcMapperImpl implements JdbcMapper {
             var result = dbExecutor.selectRecord(getConnection(), getLoadSql(tClass.getName(), entityMeta), id, resultSet -> {
                 try {
                     if (resultSet.next()) {
-                        return entityHandler.deserialize(resultSet, tClass, entityMeta);
+                        return entityHandler.deserialize(resultSet, entityMeta);
                     }
-                } catch (SQLException | NoSuchMethodException | IllegalAccessException | InvocationTargetException | InstantiationException ex) {
+                } catch (SQLException | IllegalAccessException | InvocationTargetException | InstantiationException ex) {
                     log.error("Error on select. Error message:{}, Error:", ex.getMessage(), ex);
                 }
                 return null;

@@ -1,5 +1,7 @@
 package ru.otus.custom.orm;
 
+import lombok.SneakyThrows;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
@@ -14,13 +16,15 @@ public class EntityHandler {
 
     private final Map<Class<?>, EntityMeta> entityMap = new HashMap<>();
 
-    EntityMeta serialize(Class<?> tClass) {
+    @SneakyThrows
+    <T> EntityMeta serialize(Class<?> tClass) {
         if (entityMap.containsKey(tClass)) {
             return entityMap.get(tClass);
         }
         Field primaryKey = null;
         List<Field> columnNames = new ArrayList<>();
         var fields = tClass.getDeclaredFields();
+        var constructor = tClass.getConstructor();
         for (Field f : fields) {
             if (Modifier.isTransient(f.getModifiers())) {
                 continue;
@@ -31,11 +35,11 @@ public class EntityHandler {
             }
             columnNames.add(f);
         }
-        entityMap.put(tClass, new EntityMeta(primaryKey, tClass.getSimpleName(), columnNames));
+        entityMap.put(tClass, new EntityMeta(primaryKey, tClass.getSimpleName(), columnNames, constructor));
         return entityMap.get(tClass);
     }
 
-    <T> EntityMetaValue serialize(T objectData) throws NoSuchFieldException, IllegalAccessException {
+    <T> EntityMetaValue serialize(T objectData) throws IllegalAccessException {
         Class<?> aClass = objectData.getClass();
         EntityMeta entityMeta = serialize(aClass);
         List<Object> columnValues = new ArrayList<>();
@@ -48,16 +52,17 @@ public class EntityHandler {
         return new EntityMetaValue(primaryKeyField.get(objectData).toString(), entityMeta, columnValues);
     }
 
-    <T> T deserialize(ResultSet resultSet, Class<T> tClass, EntityMeta entityMeta) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException, SQLException {
-        var instance = tClass.getConstructor().newInstance();
+    <T> T deserialize(ResultSet resultSet, EntityMeta entityMeta) throws IllegalAccessException, InvocationTargetException, InstantiationException, SQLException {
+        var instance = entityMeta.getConstructor().newInstance();
         Field primaryKey = entityMeta.getPrimaryKey();
         primaryKey.setAccessible(true);
         primaryKey.set(instance, resultSet.getObject(primaryKey.getName()));
+
         var fields = entityMeta.getFields();
         for (Field f : fields) {
             f.setAccessible(true);
             f.set(instance, resultSet.getObject(f.getName()));
         }
-        return instance;
+        return (T) instance;
     }
 }
