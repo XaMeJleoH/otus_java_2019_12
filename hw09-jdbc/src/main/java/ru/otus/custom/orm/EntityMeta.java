@@ -8,11 +8,11 @@ import java.util.List;
 
 @Getter
 class EntityMeta {
-    private final String primaryKey;
+    private final Field primaryKey;
     private final String name;
     private final List<Field> fields;
 
-    EntityMeta(String primaryKey, String name, List<Field> fields) {
+    EntityMeta(Field primaryKey, String name, List<Field> fields) {
         this.primaryKey = primaryKey;
         this.name = name;
         this.fields = List.copyOf(fields != null ? fields : new ArrayList<>());

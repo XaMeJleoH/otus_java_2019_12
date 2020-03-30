@@ -79,7 +79,7 @@ public class JdbcMapperImpl implements JdbcMapper {
     private String getUpdateSql(EntityMetaValue entityMetaValue) {
         return "update " + entityMetaValue.getEntityMeta().getName() +
                 " set " + fillSets(entityMetaValue) +
-                " where " + entityMetaValue.getEntityMeta().getPrimaryKey() + " = ?";
+                " where " + entityMetaValue.getEntityMeta().getPrimaryKey().getName() + " = ?";
     }
 
     private String fillSets(EntityMetaValue entityMetaValue) {
@@ -111,9 +111,9 @@ public class JdbcMapperImpl implements JdbcMapper {
         }
 
         loadSqlMap.put(className,
-                "select " + entityMeta.getPrimaryKey() + ", " + convertFieldToSQLString(entityMeta.getFields()) +
+                "select " + entityMeta.getPrimaryKey().getName() + ", " + convertFieldToSQLString(entityMeta.getFields()) +
                         " from " + entityMeta.getName() +
-                        " where " + entityMeta.getPrimaryKey() + "  = ?");
+                        " where " + entityMeta.getPrimaryKey().getName() + "  = ?");
 
         return loadSqlMap.get(className);
     }

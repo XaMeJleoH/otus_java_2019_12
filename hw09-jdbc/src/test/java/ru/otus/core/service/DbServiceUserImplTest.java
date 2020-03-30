@@ -76,6 +76,7 @@ class DbServiceUserImplTest {
         final User sheldonator = new User(returnedSheldon.getId(), "Sheldonator", 111);
         final User pennyWise = new User(returnedPenny.getId(), "Penny Wise", 125);
 
+        System.out.println("now!");
         dbServiceUser.updateUser(sheldonator);
         dbServiceUser.updateUser(pennyWise);
 

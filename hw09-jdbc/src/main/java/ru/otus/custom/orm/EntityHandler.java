@@ -18,7 +18,7 @@ public class EntityHandler {
         if (entityMap.containsKey(tClass)) {
             return entityMap.get(tClass);
         }
-        String primaryKey = null;
+        Field primaryKey = null;
         List<Field> columnNames = new ArrayList<>();
         var fields = tClass.getDeclaredFields();
         for (Field f : fields) {
@@ -26,7 +26,7 @@ public class EntityHandler {
                 continue;
             }
             if (f.getDeclaredAnnotation(Id.class) != null) {
-                primaryKey = f.getName();
+                primaryKey = f;
                 continue;
             }
             columnNames.add(f);
@@ -39,22 +39,20 @@ public class EntityHandler {
         Class<?> aClass = objectData.getClass();
         EntityMeta entityMeta = serialize(aClass);
         List<Object> columnValues = new ArrayList<>();
-        String primaryKey;
         for (Field field : entityMeta.getFields()) {
             field.setAccessible(true);
             columnValues.add(field.get(objectData));
         }
-        var primaryKeyField = aClass.getDeclaredField(entityMeta.getPrimaryKey());
+        var primaryKeyField = entityMeta.getPrimaryKey();
         primaryKeyField.setAccessible(true);
-        primaryKey = primaryKeyField.get(objectData).toString();
-        return new EntityMetaValue(primaryKey, entityMeta, columnValues);
+        return new EntityMetaValue(primaryKeyField.get(objectData).toString(), entityMeta, columnValues);
     }
 
     <T> T deserialize(ResultSet resultSet, Class<T> tClass, EntityMeta entityMeta) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException, SQLException {
         var instance = tClass.getConstructor().newInstance();
         var fields = tClass.getDeclaredFields();
         for (Field f : fields) {
-            if (entityMeta.getFields().contains(f) || entityMeta.getPrimaryKey().equals(f.getName())) {
+            if (entityMeta.getFields().contains(f) || entityMeta.getPrimaryKey().equals(f)) {
                 f.setAccessible(true);
                 f.set(instance, resultSet.getObject(f.getName()));
             }
