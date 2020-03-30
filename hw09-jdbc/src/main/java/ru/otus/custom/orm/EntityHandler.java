@@ -50,12 +50,13 @@ public class EntityHandler {
 
     <T> T deserialize(ResultSet resultSet, Class<T> tClass, EntityMeta entityMeta) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException, SQLException {
         var instance = tClass.getConstructor().newInstance();
-        var fields = tClass.getDeclaredFields();
+        Field primaryKey = entityMeta.getPrimaryKey();
+        primaryKey.setAccessible(true);
+        primaryKey.set(instance, resultSet.getObject(primaryKey.getName()));
+        var fields = entityMeta.getFields();
         for (Field f : fields) {
-            if (entityMeta.getFields().contains(f) || entityMeta.getPrimaryKey().equals(f)) {
-                f.setAccessible(true);
-                f.set(instance, resultSet.getObject(f.getName()));
-            }
+            f.setAccessible(true);
+            f.set(instance, resultSet.getObject(f.getName()));
         }
         return instance;
     }
