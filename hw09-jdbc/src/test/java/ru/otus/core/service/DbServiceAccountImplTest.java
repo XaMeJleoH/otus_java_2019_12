@@ -21,6 +21,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @Slf4j
 class DbServiceAccountImplTest {
@@ -53,8 +54,12 @@ class DbServiceAccountImplTest {
         long sheldonIn = dbServiceAccount.saveAccount(sheldonAccount);
         long pennyId = dbServiceAccount.saveAccount(pennyAccount);
 
-        Account returnedSheldon = dbServiceAccount.getAccount(sheldonIn).get();
-        Account returnedPenny = dbServiceAccount.getAccount(pennyId).get();
+
+        Account returnedSheldon = dbServiceAccount.getAccount(sheldonIn).orElse(null);
+        Account returnedPenny = dbServiceAccount.getAccount(pennyId).orElse(null);
+
+        assertNotNull(returnedSheldon);
+        assertNotNull(returnedPenny);
 
         assertEquals(sheldonAccount.getType(), returnedSheldon.getType());
         assertEquals(sheldonAccount.getRest(), returnedSheldon.getRest());

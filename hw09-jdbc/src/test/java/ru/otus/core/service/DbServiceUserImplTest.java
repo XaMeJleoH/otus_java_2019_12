@@ -70,8 +70,11 @@ class DbServiceUserImplTest {
         long sheldonIn = dbServiceUser.saveUser(sheldon);
         long pennyId = dbServiceUser.saveUser(penny);
 
-        User returnedSheldon = dbServiceUser.getUser(sheldonIn).get();
-        User returnedPenny = dbServiceUser.getUser(pennyId).get();
+        User returnedSheldon = dbServiceUser.getUser(sheldonIn).orElse(null);
+        User returnedPenny = dbServiceUser.getUser(pennyId).orElse(null);
+
+        assertNotNull(returnedSheldon);
+        assertNotNull(returnedPenny);
 
         final User sheldonator = new User(returnedSheldon.getId(), "Sheldonator", 111);
         final User pennyWise = new User(returnedPenny.getId(), "Penny Wise", 125);
