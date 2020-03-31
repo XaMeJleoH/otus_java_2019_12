@@ -26,6 +26,7 @@
         <module>hw07-department-atm</module>
         <module>hw08-json</module>
         <module>hw09-jdbc</module>
+        <module>hw10-hibernate</module>
 
     </modules>
 
@@ -43,6 +44,8 @@
         <commons-lang3.version>3.0</commons-lang3.version>
         <logback-classic.version>1.2.3</logback-classic.version>
         <h2.version>1.4.200</h2.version>
+        <hibernate-core.version>5.4.4.Final</hibernate-core.version>
+        <assertj-core.version>3.13.2</assertj-core.version>
     </properties>
 
     <dependencyManagement>
