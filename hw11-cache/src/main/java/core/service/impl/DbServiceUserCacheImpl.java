@@ -31,6 +31,7 @@ public class DbServiceUserCacheImpl implements DBServiceUser {
             sessionManager.beginSession();
             try {
                 userId = userDao.saveUser(user);
+                cache.put(userId, user);
                 sessionManager.commitSession();
                 log.info("created user: {}", userId);
             } catch (Exception e) {
