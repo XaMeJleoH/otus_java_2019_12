@@ -1,8 +1,7 @@
 package ru.otus.hw;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import core.service.impl.DbServiceUserCacheImpl;
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.SessionFactory;
 import ru.otus.core.dao.UserDao;
 import ru.otus.core.model.Address;
@@ -18,6 +17,9 @@ import ru.otus.hw.server.UsersWebServer;
 import ru.otus.hw.server.UsersWebServerSimple;
 import ru.otus.hw.services.TemplateProcessor;
 import ru.otus.hw.services.TemplateProcessorImpl;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /*
     Полезные для демо ссылки
@@ -43,11 +45,10 @@ public class WebServerSimpleDemo {
         HwCache<Long, User> cache = new MyCache<>();
         DBServiceUser dbServiceUser = new DbServiceUserCacheImpl(userDao, cache);
 
-        Gson gson = new GsonBuilder().serializeNulls().setPrettyPrinting().create();
         TemplateProcessor templateProcessor = new TemplateProcessorImpl(TEMPLATES_DIR);
 
         UsersWebServer usersWebServer = new UsersWebServerSimple(WEB_SERVER_PORT, dbServiceUser,
-                gson, templateProcessor);
+                 templateProcessor);
 
         usersWebServer.start();
         usersWebServer.join();

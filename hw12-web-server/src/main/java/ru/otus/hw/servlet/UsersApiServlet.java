@@ -1,8 +1,7 @@
 package ru.otus.hw.servlet;
 
-import com.google.gson.Gson;
-import core.service.impl.DbServiceUserCacheImpl;
-import ru.otus.core.dao.UserDao;
+import lombok.extern.slf4j.Slf4j;
+import org.json.JSONObject;
 import ru.otus.core.model.User;
 import ru.otus.core.service.DBServiceUser;
 
@@ -11,18 +10,17 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Optional;
 
-
+@Slf4j
 public class UsersApiServlet extends HttpServlet {
 
     private static final int ID_PATH_PARAM_POSITION = 1;
 
     private final DBServiceUser dbServiceUser;
-    private final Gson gson;
 
-    public UsersApiServlet(DBServiceUser dbServiceUser, Gson gson) {
+    public UsersApiServlet(DBServiceUser dbServiceUser) {
         this.dbServiceUser = dbServiceUser;
-        this.gson = gson;
     }
 
     @Override
@@ -31,7 +29,11 @@ public class UsersApiServlet extends HttpServlet {
 
         response.setContentType("application/json;charset=UTF-8");
         ServletOutputStream out = response.getOutputStream();
-        out.print(gson.toJson(user));
+
+        JSONObject jo = new JSONObject(user);
+        log.warn(jo.toString());
+
+        out.print(jo.toString());
     }
 
     private long extractIdFromRequest(HttpServletRequest request) {
