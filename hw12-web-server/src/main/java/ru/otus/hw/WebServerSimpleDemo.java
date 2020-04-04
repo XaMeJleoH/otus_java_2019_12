@@ -8,6 +8,7 @@ import ru.otus.core.dao.UserDao;
 import ru.otus.core.model.Address;
 import ru.otus.core.model.Phone;
 import ru.otus.core.model.User;
+import ru.otus.core.service.DBServiceUser;
 import ru.otus.hibernate.HibernateUtils;
 import ru.otus.hibernate.dao.UserDaoHibernate;
 import ru.otus.hibernate.sessionmanager.SessionManagerHibernate;
@@ -39,11 +40,13 @@ public class WebServerSimpleDemo {
         SessionFactory sessionFactory = HibernateUtils.buildSessionFactory("hibernate.cfg.xml", User.class, Address.class, Phone.class);
         SessionManagerHibernate sessionManagerCache = new SessionManagerHibernate(sessionFactory);
         UserDao userDao = new UserDaoHibernate(sessionManagerCache);
+        HwCache<Long, User> cache = new MyCache<>();
+        DBServiceUser dbServiceUser = new DbServiceUserCacheImpl(userDao, cache);
 
         Gson gson = new GsonBuilder().serializeNulls().setPrettyPrinting().create();
         TemplateProcessor templateProcessor = new TemplateProcessorImpl(TEMPLATES_DIR);
 
-        UsersWebServer usersWebServer = new UsersWebServerSimple(WEB_SERVER_PORT, userDao,
+        UsersWebServer usersWebServer = new UsersWebServerSimple(WEB_SERVER_PORT, dbServiceUser,
                 gson, templateProcessor);
 
         usersWebServer.start();

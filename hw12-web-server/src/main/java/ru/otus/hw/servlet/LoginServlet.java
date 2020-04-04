@@ -11,7 +11,6 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Collections;
 
-import static javax.servlet.http.HttpServletResponse.*;
 import static javax.servlet.http.HttpServletResponse.SC_UNAUTHORIZED;
 
 public class LoginServlet extends HttpServlet {
@@ -31,7 +30,7 @@ public class LoginServlet extends HttpServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("text/html");
         response.getWriter().println(templateProcessor.getPage(LOGIN_PAGE_TEMPLATE, Collections.emptyMap()));
     }
