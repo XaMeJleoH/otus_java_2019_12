@@ -4,6 +4,10 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <!-- Project Object Model -->
+    <!-- All POMs extend the Super POM unless explicitly set -->
+    <!--parent>*</parent-->
+
     <groupId>ru.otus</groupId>
     <artifactId>OtusJavaHW</artifactId>
     <version>2019-12-SNAPSHOT</version>
@@ -27,7 +31,7 @@
         <module>hw08-json</module>
         <module>hw09-jdbc</module>
         <module>hw10-hibernate</module>
-
+        <module>hw11-cache</module>
     </modules>
 
     <properties>
