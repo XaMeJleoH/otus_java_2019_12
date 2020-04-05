@@ -1,23 +1,29 @@
 package ru.otus.hw.web.core.server;
 
 import lombok.extern.slf4j.Slf4j;
+import org.eclipse.jetty.security.ConstraintMapping;
+import org.eclipse.jetty.security.ConstraintSecurityHandler;
 import org.eclipse.jetty.security.LoginService;
+import org.eclipse.jetty.security.authentication.BasicAuthenticator;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
-import ru.otus.core.model.Address;
-import ru.otus.core.model.User;
+import org.eclipse.jetty.util.security.Constraint;
 import ru.otus.hw.db.service.DBServiceWebUser;
 import ru.otus.hw.web.core.helpers.FileSystemHelper;
 import ru.otus.hw.web.core.services.TemplateProcessor;
 import ru.otus.hw.web.core.servlet.CreateUserServlet;
 import ru.otus.hw.web.core.servlet.UsersServlet;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 @Slf4j
-public class UsersWebServerSimple implements UsersWebServer {
+public class UsersWebServerImpl implements UsersWebServer {
     private static final String START_PAGE_NAME = "index.html";
     private static final String COMMON_RESOURCES_DIR = "static";
     private static final String ROLE_NAME_ADMIN = "admin";
@@ -25,11 +31,11 @@ public class UsersWebServerSimple implements UsersWebServer {
 
     private final DBServiceWebUser dbServiceWebUser;
     private final LoginService loginService;
-    protected final TemplateProcessor templateProcessor;
+    private final TemplateProcessor templateProcessor;
     private final Server server;
 
-    public UsersWebServerSimple(int port, DBServiceWebUser dbServiceWebUser, LoginService loginService,
-                                TemplateProcessor templateProcessor) {
+    public UsersWebServerImpl(int port, DBServiceWebUser dbServiceWebUser, LoginService loginService,
+                              TemplateProcessor templateProcessor) {
         this.dbServiceWebUser = dbServiceWebUser;
         this.loginService = loginService;
         this.templateProcessor = templateProcessor;
@@ -54,23 +60,38 @@ public class UsersWebServerSimple implements UsersWebServer {
         server.stop();
     }
 
-    private Server initContext() {
-
+    private void initContext() {
         ResourceHandler resourceHandler = createResourceHandler();
         ServletContextHandler servletContextHandler = createServletContextHandler();
-        initNewUsers(dbServiceWebUser);
 
         HandlerList handlers = new HandlerList();
         handlers.addHandler(resourceHandler);
-        handlers.addHandler(applySecurity(servletContextHandler, "/users", "/api/user/*"));
-
+        handlers.addHandler(applySecurity(servletContextHandler, "/users", "/create_user"));
 
         server.setHandler(handlers);
-        return server;
     }
 
-    protected Handler applySecurity(ServletContextHandler servletContextHandler, String ...paths) {
-        return servletContextHandler;
+    private Handler applySecurity(ServletContextHandler servletContextHandler, String... paths) {
+        Constraint constraint = new Constraint();
+        constraint.setName(CONSTRAINT_NAME);
+        constraint.setAuthenticate(true);
+        constraint.setRoles(new String[]{ROLE_NAME_ADMIN});
+
+        List<ConstraintMapping> constraintMappings = new ArrayList<>();
+        Arrays.stream(paths).forEachOrdered(path -> {
+            ConstraintMapping mapping = new ConstraintMapping();
+            mapping.setPathSpec(path);
+            mapping.setConstraint(constraint);
+            constraintMappings.add(mapping);
+        });
+
+        ConstraintSecurityHandler security = new ConstraintSecurityHandler();
+        security.setAuthenticator(new BasicAuthenticator());
+        security.setLoginService(loginService);
+        security.setConstraintMappings(constraintMappings);
+        security.setHandler(new HandlerList(servletContextHandler));
+
+        return security;
     }
 
     private ResourceHandler createResourceHandler() {
@@ -87,15 +108,4 @@ public class UsersWebServerSimple implements UsersWebServer {
         servletContextHandler.addServlet(new ServletHolder(new CreateUserServlet(templateProcessor, dbServiceWebUser)), "/create_user");
         return servletContextHandler;
     }
-
-    private void initNewUsers(DBServiceWebUser dbServiceWebUser) {
-        User sheldon = new User("Sheldon", 31, new Address("Mira, d.2, flat 255"));
-        long sheldonId = dbServiceWebUser.saveUser(sheldon);
-        log.warn("Sheldon was inserted, sheldonId={}", sheldonId);
-
-        User penny = new User("Penny", 27, new Address("Mira, d.2, flat 256"));
-        long pennyId = dbServiceWebUser.saveUser(penny);
-        log.warn("Penny was inserted, him pennyId={}", pennyId);
-    }
-
 }

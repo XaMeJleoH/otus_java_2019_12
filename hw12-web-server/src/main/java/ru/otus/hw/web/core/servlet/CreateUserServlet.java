@@ -5,13 +5,11 @@ import ru.otus.core.model.User;
 import ru.otus.hw.db.service.DBServiceWebUser;
 import ru.otus.hw.web.core.services.TemplateProcessor;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Map;
 
 @Slf4j
 public class CreateUserServlet extends HttpServlet {
