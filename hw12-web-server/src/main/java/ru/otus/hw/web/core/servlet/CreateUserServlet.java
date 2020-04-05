@@ -1,10 +1,13 @@
-package ru.otus.hw.servlet;
+package ru.otus.hw.web.core.servlet;
 
-import core.service.impl.DbServiceUserCacheImpl;
-import ru.otus.core.dao.UserDao;
+import lombok.extern.slf4j.Slf4j;
+import org.json.JSONObject;
+import ru.otus.core.model.User;
 import ru.otus.core.service.DBServiceUser;
-import ru.otus.hw.services.TemplateProcessor;
+import ru.otus.hw.db.service.DBServiceWebUser;
+import ru.otus.hw.web.core.services.TemplateProcessor;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -12,29 +15,29 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+@Slf4j
+public class CreateUserServlet extends HttpServlet {
+    private static final String USERS_PAGE_TEMPLATE = "create_user.html";
+    private static final String TEMPLATE_ATTR_RANDOM_USER = "user";
 
-public class UsersServlet extends HttpServlet {
-
-    private static final String USERS_PAGE_TEMPLATE = "users.html";
-    private static final String TEMPLATE_ATTR_RANDOM_USER = "randomUser";
-
-    private final DBServiceUser dbServiceUser;
+    private final DBServiceWebUser dbServiceWebUser;
     private final TemplateProcessor templateProcessor;
 
-    public UsersServlet(TemplateProcessor templateProcessor, DBServiceUser dbServiceUser) {
+    public CreateUserServlet(TemplateProcessor templateProcessor, DBServiceWebUser dbServiceWebUser) {
         this.templateProcessor = templateProcessor;
-        this.dbServiceUser = dbServiceUser;
+        this.dbServiceWebUser = dbServiceWebUser;
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse response) throws IOException {
         Map<String, Object> paramsMap = new HashMap<>();
         // TODO: 04.04.2020
-        //dbServiceUser.findUser
+        dbServiceWebUser.getAllUsers().forEach(user -> paramsMap.put(TEMPLATE_ATTR_RANDOM_USER, user));
         //userDao.findRandomUser().ifPresent(randomUser -> paramsMap.put(TEMPLATE_ATTR_RANDOM_USER, randomUser));
 
         response.setContentType("text/html");
         response.getWriter().println(templateProcessor.getPage(USERS_PAGE_TEMPLATE, paramsMap));
     }
+
 
 }

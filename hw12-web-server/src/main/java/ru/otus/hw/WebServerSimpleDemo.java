@@ -1,7 +1,6 @@
 package ru.otus.hw;
 
 import core.service.impl.DbServiceUserCacheImpl;
-import lombok.extern.slf4j.Slf4j;
 import org.hibernate.SessionFactory;
 import ru.otus.core.dao.UserDao;
 import ru.otus.core.model.Address;
@@ -13,13 +12,14 @@ import ru.otus.hibernate.dao.UserDaoHibernate;
 import ru.otus.hibernate.sessionmanager.SessionManagerHibernate;
 import ru.otus.hw.cache.HwCache;
 import ru.otus.hw.cache.MyCache;
-import ru.otus.hw.server.UsersWebServer;
-import ru.otus.hw.server.UsersWebServerSimple;
-import ru.otus.hw.services.TemplateProcessor;
-import ru.otus.hw.services.TemplateProcessorImpl;
-
-import java.util.ArrayList;
-import java.util.List;
+import ru.otus.hw.db.dao.UserWebDao;
+import ru.otus.hw.db.dao.UserWebDaoImpl;
+import ru.otus.hw.db.service.DBServiceWebUser;
+import ru.otus.hw.db.service.DBServiceWebUserImpl;
+import ru.otus.hw.web.core.server.UsersWebServer;
+import ru.otus.hw.web.core.server.UsersWebServerSimple;
+import ru.otus.hw.web.core.services.TemplateProcessor;
+import ru.otus.hw.web.core.services.TemplateProcessorImpl;
 
 /*
     Полезные для демо ссылки
@@ -41,9 +41,9 @@ public class WebServerSimpleDemo {
 
         SessionFactory sessionFactory = HibernateUtils.buildSessionFactory("hibernate.cfg.xml", User.class, Address.class, Phone.class);
         SessionManagerHibernate sessionManagerCache = new SessionManagerHibernate(sessionFactory);
-        UserDao userDao = new UserDaoHibernate(sessionManagerCache);
+        UserWebDao userWebDao = new UserWebDaoImpl(sessionManagerCache);
         HwCache<Long, User> cache = new MyCache<>();
-        DBServiceUser dbServiceUser = new DbServiceUserCacheImpl(userDao, cache);
+        DBServiceWebUser dbServiceUser = new DBServiceWebUserImpl(userWebDao, cache);
 
         TemplateProcessor templateProcessor = new TemplateProcessorImpl(TEMPLATES_DIR);
 

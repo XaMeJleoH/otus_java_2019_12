@@ -1,4 +1,4 @@
-package ru.otus.hw.server;
+package ru.otus.hw.web.core.server;
 
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.jetty.server.Handler;
@@ -9,23 +9,23 @@ import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import ru.otus.core.model.Address;
 import ru.otus.core.model.User;
-import ru.otus.core.service.DBServiceUser;
-import ru.otus.hw.helpers.FileSystemHelper;
-import ru.otus.hw.services.TemplateProcessor;
-import ru.otus.hw.servlet.UsersApiServlet;
-import ru.otus.hw.servlet.UsersServlet;
+import ru.otus.hw.db.service.DBServiceWebUser;
+import ru.otus.hw.web.core.helpers.FileSystemHelper;
+import ru.otus.hw.web.core.services.TemplateProcessor;
+import ru.otus.hw.web.core.servlet.CreateUserServlet;
+import ru.otus.hw.web.core.servlet.UsersServlet;
 
 @Slf4j
 public class UsersWebServerSimple implements UsersWebServer {
     private static final String START_PAGE_NAME = "index.html";
     private static final String COMMON_RESOURCES_DIR = "static";
 
-    private final DBServiceUser dbServiceUser;
+    private final DBServiceWebUser dbServiceWebUser;
     protected final TemplateProcessor templateProcessor;
     private final Server server;
 
-    public UsersWebServerSimple(int port, DBServiceUser dbServiceUser, TemplateProcessor templateProcessor) {
-        this.dbServiceUser = dbServiceUser;
+    public UsersWebServerSimple(int port, DBServiceWebUser dbServiceWebUser, TemplateProcessor templateProcessor) {
+        this.dbServiceWebUser = dbServiceWebUser;
         this.templateProcessor = templateProcessor;
         server = new Server(port);
     }
@@ -52,7 +52,7 @@ public class UsersWebServerSimple implements UsersWebServer {
 
         ResourceHandler resourceHandler = createResourceHandler();
         ServletContextHandler servletContextHandler = createServletContextHandler();
-        initNewUsers(dbServiceUser);
+        initNewUsers(dbServiceWebUser);
 
         HandlerList handlers = new HandlerList();
         handlers.addHandler(resourceHandler);
@@ -77,14 +77,14 @@ public class UsersWebServerSimple implements UsersWebServer {
 
     private ServletContextHandler createServletContextHandler() {
         ServletContextHandler servletContextHandler = new ServletContextHandler(ServletContextHandler.SESSIONS);
-        servletContextHandler.addServlet(new ServletHolder(new UsersServlet(templateProcessor, dbServiceUser)), "/users");
-        servletContextHandler.addServlet(new ServletHolder(new UsersApiServlet(dbServiceUser)), "/api/user/*");
+        servletContextHandler.addServlet(new ServletHolder(new UsersServlet(templateProcessor, dbServiceWebUser)), "/users");
+        servletContextHandler.addServlet(new ServletHolder(new CreateUserServlet(templateProcessor, dbServiceWebUser)), "/create_user");
         return servletContextHandler;
     }
 
-    private void initNewUsers(DBServiceUser dbServiceUser) {
+    private void initNewUsers(DBServiceWebUser dbServiceWebUser) {
         User sheldon = getUser();
-        long id = dbServiceUser.saveUser(sheldon);
+        long id = dbServiceWebUser.saveUser(sheldon);
         log.warn("Sheldon was inserted, him id={}", id);
     }
 

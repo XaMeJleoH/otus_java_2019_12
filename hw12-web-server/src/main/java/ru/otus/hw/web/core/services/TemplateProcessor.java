@@ -1,4 +1,4 @@
-package ru.otus.hw.services;
+package ru.otus.hw.web.core.services;
 
 import java.io.IOException;
 import java.util.Map;

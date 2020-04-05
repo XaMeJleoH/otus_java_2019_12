@@ -1,4 +1,4 @@
-package ru.otus.hw.helpers;
+package ru.otus.hw.web.core.helpers;
 
 import java.io.File;
 import java.net.URLDecoder;
