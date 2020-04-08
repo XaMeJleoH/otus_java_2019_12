@@ -6,23 +6,24 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.view.RedirectView;
-import ru.otus.core.model.User;
-import ru.otus.hw.web.repostory.UserRepository;
+import ru.otus.hw.db.model.User;
+import ru.otus.hw.db.service.DBServiceWebUser;
+
 import java.util.List;
 
 
 @Controller
 public class UserController {
 
-    private final UserRepository repository;
+    private final DBServiceWebUser dbService;
 
-    public UserController(UserRepository repository) {
-        this.repository = repository;
+    public UserController(DBServiceWebUser dbService) {
+        this.dbService = dbService;
     }
 
     @GetMapping({"/", "/user/list"})
     public String userListView(Model model) {
-        List<User> users = repository.findAll();
+        List<User> users = dbService.getAllUsers();
         model.addAttribute("users", users);
         return "userList.html";
     }
@@ -35,7 +36,7 @@ public class UserController {
 
     @PostMapping("/user/save")
     public RedirectView userSave(@ModelAttribute User user) {
-        repository.create(user.getName());
+        dbService.saveUser(user);
         return new RedirectView("/user/list", true);
     }
 
