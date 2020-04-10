@@ -15,29 +15,37 @@ import java.util.List;
 @Controller
 public class UserController {
 
+    private static final String INDEX_PAGE_TEMPLATE = "index.html";
+    private static final String CREATE_USER_PAGE_TEMPLATE = "create_user.html";
+    private static final String USERS_PAGE_TEMPLATE = "users.html";
     private final DBServiceWebUser dbService;
 
     public UserController(DBServiceWebUser dbService) {
         this.dbService = dbService;
     }
 
-    @GetMapping({"/", "/user/list"})
+    @GetMapping("/")
+    public String  startPageView(Model model) {
+        return INDEX_PAGE_TEMPLATE;
+    }
+
+    @GetMapping({"/users"})
     public String userListView(Model model) {
         List<User> users = dbService.getAllUsers();
         model.addAttribute("users", users);
-        return "userList.html";
+        return USERS_PAGE_TEMPLATE;
     }
 
-    @GetMapping("/user/create")
+    @GetMapping("create_user")
     public String userCreateView(Model model) {
         model.addAttribute("user", new User());
-        return "userCreate.html";
+        return CREATE_USER_PAGE_TEMPLATE;
     }
 
-    @PostMapping("/user/save")
+    @PostMapping("create_user")
     public RedirectView userSave(@ModelAttribute User user) {
         dbService.saveUser(user);
-        return new RedirectView("/user/list", true);
+        return new RedirectView(USERS_PAGE_TEMPLATE, true);
     }
 
 }

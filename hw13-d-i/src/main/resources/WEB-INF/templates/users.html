@@ -1,0 +1,27 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Список всех пользователей</title>
+</head>
+
+<h4>Список всех пользователей</h4>
+<table style="width: 400px">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Имя</th>
+        <th>Возраст</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="user : ${users}">
+        <td th:text="${user.id}">1</td>
+        <td th:text="${user.name}">John Doe</td>
+        <td th:text="${user.age}">51</td>
+    </tr>
+    </tbody>
+</table>
+
+<a href="./">Перейти на главную страницу</a>
+
+</body>
+</html>

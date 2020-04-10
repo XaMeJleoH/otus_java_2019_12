@@ -2,6 +2,7 @@ package ru.otus.hw;
 
 import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
+import ru.otus.hw.web.security.SecurityConfig;
 
 import javax.servlet.Filter;
 
@@ -10,7 +11,7 @@ public class WebAppInitializer extends AbstractAnnotationConfigDispatcherServlet
 
     @Override
     protected Class<?>[] getRootConfigClasses() {
-        return null;
+        return new Class<?>[] {SecurityConfig.class};
     }
 
     @Override
