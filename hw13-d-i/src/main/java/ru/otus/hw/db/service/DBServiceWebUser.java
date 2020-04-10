@@ -1,6 +1,5 @@
 package ru.otus.hw.db.service;
 
-
 import ru.otus.hw.db.model.User;
 
 import java.util.List;

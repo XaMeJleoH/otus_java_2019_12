@@ -1,4 +1,4 @@
-package ru.otus.hw.web;
+package ru.otus.hw;
 
 import org.hibernate.SessionFactory;
 import org.springframework.context.ApplicationContext;

@@ -1,4 +1,4 @@
-package ru.otus.hw.web;
+package ru.otus.hw;
 
 import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;

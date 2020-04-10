@@ -1,4 +1,4 @@
-package ru.otus.hw.cache;
+package ru.otus.hw.db.cache;
 
 /**
  * @author sergey

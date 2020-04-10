@@ -2,8 +2,8 @@ package ru.otus.hw.db.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import ru.otus.hw.cache.HwCache;
-import ru.otus.hw.cache.HwListener;
+import ru.otus.hw.db.cache.HwCache;
+import ru.otus.hw.db.cache.HwListener;
 import ru.otus.hw.db.dao.UserWebDao;
 import ru.otus.hw.db.model.User;
 import ru.otus.hw.db.sessionmanager.SessionManager;
