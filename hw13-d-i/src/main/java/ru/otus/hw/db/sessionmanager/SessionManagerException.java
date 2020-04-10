@@ -1,8 +1,8 @@
 package ru.otus.hw.db.sessionmanager;
 
 
-class SessionManagerException extends RuntimeException {
-  SessionManagerException(String msg) {
+public class SessionManagerException extends RuntimeException {
+  public SessionManagerException(String msg) {
     super(msg);
   }
 

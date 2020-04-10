@@ -1,5 +1,6 @@
 package ru.otus.hw.web;
 
+import org.hibernate.SessionFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -11,6 +12,10 @@ import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 import org.thymeleaf.templatemode.TemplateMode;
+import ru.otus.hw.hibernate.HibernateUtils;
+import ru.otus.hw.db.model.Address;
+import ru.otus.hw.db.model.Phone;
+import ru.otus.hw.db.model.User;
 
 @Configuration
 @ComponentScan
@@ -54,5 +59,11 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/**").addResourceLocations("/WEB-INF/static/");
+    }
+
+    @Bean
+    public SessionFactory sessionFactory() {
+        return HibernateUtils.buildSessionFactory("hibernate.cfg.xml",
+                User.class, Address.class, Phone.class);
     }
 }

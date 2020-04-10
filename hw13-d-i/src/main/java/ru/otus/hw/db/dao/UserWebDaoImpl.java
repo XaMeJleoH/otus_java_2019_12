@@ -4,9 +4,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
 import ru.otus.hw.db.model.User;
-import ru.otus.hw.db.sessionmanager.DatabaseSessionHibernate;
+import ru.otus.hw.hibernate.sessionmanager.DatabaseSessionHibernate;
 import ru.otus.hw.db.sessionmanager.SessionManager;
-import ru.otus.hw.db.sessionmanager.SessionManagerHibernate;
+import ru.otus.hw.hibernate.sessionmanager.SessionManagerHibernate;
 
 import java.util.List;
 import java.util.Optional;

@@ -1,9 +1,11 @@
-package ru.otus.hw.db.sessionmanager;
+package ru.otus.hw.hibernate.sessionmanager;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.springframework.stereotype.Component;
+import ru.otus.hw.db.sessionmanager.SessionManager;
+import ru.otus.hw.db.sessionmanager.SessionManagerException;
 
 @Component
 public class SessionManagerHibernate implements SessionManager {
@@ -23,7 +25,7 @@ public class SessionManagerHibernate implements SessionManager {
     try {
       databaseSession = new DatabaseSessionHibernate(sessionFactory.openSession());
     } catch (Exception e) {
-      throw new SessionManagerException(e);
+      throw new SessionManagerException(e.toString());
     }
   }
 
@@ -34,7 +36,7 @@ public class SessionManagerHibernate implements SessionManager {
       databaseSession.getTransaction().commit();
       databaseSession.getHibernateSession().close();
     } catch (Exception e) {
-      throw new SessionManagerException(e);
+      throw new SessionManagerException(e.toString());
     }
   }
 
@@ -45,7 +47,7 @@ public class SessionManagerHibernate implements SessionManager {
       databaseSession.getTransaction().rollback();
       databaseSession.getHibernateSession().close();
     } catch (Exception e) {
-      throw new SessionManagerException(e);
+      throw new SessionManagerException(e.toString());
     }
   }
 
@@ -68,7 +70,7 @@ public class SessionManagerHibernate implements SessionManager {
       databaseSession.close();
       databaseSession = null;
     } catch (Exception e) {
-      throw new SessionManagerException(e);
+      throw new SessionManagerException(e.toString());
     }
   }
 
