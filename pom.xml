@@ -34,6 +34,7 @@
         <module>hw11-cache</module>
         <module>hw12-web-server</module>
         <module>hw13-d-i</module>
+        <module>hw14-jmm</module>
     </modules>
 
     <properties>
