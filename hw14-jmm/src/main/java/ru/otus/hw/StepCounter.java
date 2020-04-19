@@ -9,7 +9,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Slf4j
 public class StepCounter {
     private int leftCount, rightCount = 0;
-    private AtomicBoolean onSomeSide = new AtomicBoolean(false);
+    private AtomicBoolean onSomeSide = new AtomicBoolean();
     private static final int LIMIT = 10;
 
     public static void main(String[] args) throws InterruptedException {
@@ -18,13 +18,14 @@ public class StepCounter {
     }
 
     private void loop() {
-        while (leftCount != LIMIT && rightCount != LIMIT){
+        for (int i = 0; i < LIMIT; i++) {
+            System.out.println("i= " + i);
             forwardStep();
         }
     }
 
     private void forwardStep() {
-        if(onSomeSide.compareAndSet(true, false)) {
+        if (onSomeSide.compareAndSet(true, false)) {
             leftCount++;
             log.info("L leg, count= {}", leftCount);
             sleep(1);
