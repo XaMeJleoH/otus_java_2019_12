@@ -21,7 +21,6 @@ import java.time.format.DateTimeFormatter;
 @EnableWebSocketMessageBroker
 @EnableScheduling
 public class ApplConfig implements WebSocketMessageBrokerConfigurer {
-  public static final String DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
   @Override
   public void configureMessageBroker(MessageBrokerRegistry config) {
@@ -32,15 +31,6 @@ public class ApplConfig implements WebSocketMessageBrokerConfigurer {
   @Override
   public void registerStompEndpoints(StompEndpointRegistry registry) {
     registry.addEndpoint("/gs-guide-websocket").withSockJS();
-  }
-
-
-  @Bean
-  public Jackson2ObjectMapperBuilderCustomizer jsonCustomizer() {
-    return builder -> {
-      builder.simpleDateFormat(DATE_TIME_FORMAT);
-      builder.serializers(new LocalDateTimeSerializer(DateTimeFormatter.ofPattern(DATE_TIME_FORMAT)));
-    };
   }
 
   @Bean
