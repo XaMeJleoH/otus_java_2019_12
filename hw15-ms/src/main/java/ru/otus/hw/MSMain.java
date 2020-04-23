@@ -28,10 +28,6 @@ public class MSMain {
     private static final String DATABASE_SERVICE_CLIENT_NAME = "databaseService";
 
     public static void main(String[] args) throws InterruptedException {
-        MessageSystem messageSystem = new MessageSystemImpl();
-
-        MsClient databaseMsClient = new MsClientImpl(DATABASE_SERVICE_CLIENT_NAME, messageSystem);
-
         // TODO: 22.04.2020
         SessionFactory sessionFactory = HibernateUtils.buildSessionFactory("hibernate.cfg.xml", User.class, Address.class, Phone.class);
         SessionManagerHibernate sessionManagerCache = new SessionManagerHibernate(sessionFactory);
@@ -41,6 +37,9 @@ public class MSMain {
         User user= new User("Sheldon", 31, new Address());
         dbService.saveUser(user);
 
+        MessageSystem messageSystem = new MessageSystemImpl();
+
+        MsClient databaseMsClient = new MsClientImpl(DATABASE_SERVICE_CLIENT_NAME, messageSystem);
         databaseMsClient.addHandler(MessageType.USER_DATA, new GetUserDataRequestHandler(dbService));
         messageSystem.addClient(databaseMsClient);
 

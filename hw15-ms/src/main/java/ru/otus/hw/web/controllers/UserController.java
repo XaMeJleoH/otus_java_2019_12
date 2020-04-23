@@ -15,9 +15,9 @@ import java.util.List;
 @Controller
 public class UserController {
 
-    private static final String INDEX_PAGE_TEMPLATE = "index.html";
-    private static final String CREATE_USER_PAGE_TEMPLATE = "create_user.html";
-    private static final String USERS_PAGE_TEMPLATE = "users.html";
+    private static final String INDEX_PAGE_TEMPLATE = "index";
+    private static final String CREATE_USER_PAGE_TEMPLATE = "create_user";
+    private static final String USERS_PAGE_TEMPLATE = "users";
     private final DBServiceWebUser dbService;
 
     public UserController(DBServiceWebUser dbService) {
