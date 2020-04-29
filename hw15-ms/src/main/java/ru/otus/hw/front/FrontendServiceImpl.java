@@ -2,16 +2,17 @@ package ru.otus.hw.front;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.otus.hw.db.model.User;
 import ru.otus.hw.messagesystem.Message;
 import ru.otus.hw.messagesystem.MessageType;
 import ru.otus.hw.messagesystem.MsClient;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
-
 
 public class FrontendServiceImpl implements FrontendService {
     private static final Logger logger = LoggerFactory.getLogger(FrontendServiceImpl.class);
@@ -30,6 +31,11 @@ public class FrontendServiceImpl implements FrontendService {
         Message outMsg = msClient.produceMessage(databaseServiceClientName, userId, MessageType.USER_DATA);
         consumerMap.put(outMsg.getId(), dataConsumer);
         msClient.sendMessage(outMsg);
+    }
+
+    @Override
+    public List<User> getAllUsers(Consumer<String> dataConsumer) {
+        return null;
     }
 
     @Override

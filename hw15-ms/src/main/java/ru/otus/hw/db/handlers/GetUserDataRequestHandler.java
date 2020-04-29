@@ -9,7 +9,6 @@ import ru.otus.hw.messagesystem.Serializers;
 
 import java.util.Optional;
 
-
 public class GetUserDataRequestHandler implements RequestHandler {
     private final DBServiceWebUser dbServiceWebUser;
 
