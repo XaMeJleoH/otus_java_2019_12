@@ -1,5 +1,6 @@
 package ru.otus.hw.web.controllers;
 
+import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,10 +21,14 @@ public class UserController {
     private static final String INDEX_PAGE_TEMPLATE = "index";
     private static final String CREATE_USER_PAGE_TEMPLATE = "create_user";
     private static final String USERS_PAGE_TEMPLATE = "users";
+    private final DBServiceWebUser dbService;
     private final FrontendService frontendService;
+    private final Gson gson;
 
-    public UserController(FrontendService frontendService) {
+    public UserController(DBServiceWebUser dbService, FrontendService frontendService, Gson gson) {
+        this.dbService = dbService;
         this.frontendService = frontendService;
+        this.gson = gson;
     }
 
     @GetMapping("/")
@@ -33,9 +38,8 @@ public class UserController {
 
     @GetMapping({"/users"})
     public String userListView(Model model) {
-        frontendService.getUserData(1, data -> log.info("got data:{}", data));
-        //List<User> users =
-        //model.addAttribute("users", users);
+        List<User> users = dbService.getAllUsers();
+        model.addAttribute("users", users);
         return USERS_PAGE_TEMPLATE;
     }
 
@@ -47,7 +51,7 @@ public class UserController {
 
     @PostMapping("create_user")
     public RedirectView userSave(@ModelAttribute User user) {
-        //dbService.saveUser(user);
+        frontendService.saveUserData(gson.toJson(user), userData -> log.info("got message: {}", userData));
         return new RedirectView(USERS_PAGE_TEMPLATE, true);
     }
 

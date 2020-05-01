@@ -2,12 +2,10 @@ package ru.otus.hw.front;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.otus.hw.db.model.User;
 import ru.otus.hw.messagesystem.Message;
 import ru.otus.hw.messagesystem.MessageType;
 import ru.otus.hw.messagesystem.MsClient;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -34,8 +32,10 @@ public class FrontendServiceImpl implements FrontendService {
     }
 
     @Override
-    public List<User> getAllUsers(Consumer<String> dataConsumer) {
-        return null;
+    public void saveUserData(String userData, Consumer<String> dataConsumer) {
+        Message outMsg = msClient.produceMessage(databaseServiceClientName, userData, MessageType.USER_DATA);
+        consumerMap.put(outMsg.getId(), dataConsumer);
+        msClient.sendMessage(outMsg);
     }
 
     @Override
