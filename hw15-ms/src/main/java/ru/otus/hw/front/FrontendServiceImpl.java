@@ -1,12 +1,9 @@
 package ru.otus.hw.front;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.SneakyThrows;
-import lombok.val;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.otus.hw.messagesystem.Message;
-import ru.otus.hw.messagesystem.MessageStr;
 import ru.otus.hw.messagesystem.MessageType;
 import ru.otus.hw.messagesystem.MsClient;
 
