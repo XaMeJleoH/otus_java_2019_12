@@ -38,7 +38,7 @@ public class FrontendServiceImpl implements FrontendService {
 
     @Override
     public void saveUserData(String userDataMessage, Consumer<String> dataConsumer) {
-        Message outMsg = msClient.produceMessage(databaseServiceClientName, parseData(userDataMessage), MessageType.USER_DATA);
+        Message outMsg = msClient.produceMessage(databaseServiceClientName, userDataMessage, MessageType.USER_DATA);
         consumerMap.put(outMsg.getId(), dataConsumer);
         msClient.sendMessage(outMsg);
     }
@@ -51,11 +51,5 @@ public class FrontendServiceImpl implements FrontendService {
             return Optional.empty();
         }
         return Optional.of(consumer);
-    }
-
-    @SneakyThrows
-    private String parseData(String userDataMessage) {
-        val userData = objectMapper.readValue(userDataMessage, MessageStr.class);
-        return objectMapper.writeValueAsString(userData.getUser());
     }
 }
