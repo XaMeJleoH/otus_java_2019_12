@@ -1,8 +1,12 @@
 package ru.otus.hw.front;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.SneakyThrows;
+import lombok.val;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.otus.hw.messagesystem.Message;
+import ru.otus.hw.messagesystem.MessageStr;
 import ru.otus.hw.messagesystem.MessageType;
 import ru.otus.hw.messagesystem.MsClient;
 
@@ -18,6 +22,7 @@ public class FrontendServiceImpl implements FrontendService {
     private final Map<UUID, Consumer<?>> consumerMap = new ConcurrentHashMap<>();
     private final MsClient msClient;
     private final String databaseServiceClientName;
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     public FrontendServiceImpl(MsClient msClient, String databaseServiceClientName) {
         this.msClient = msClient;
@@ -32,8 +37,8 @@ public class FrontendServiceImpl implements FrontendService {
     }
 
     @Override
-    public void saveUserData(String userData, Consumer<String> dataConsumer) {
-        Message outMsg = msClient.produceMessage(databaseServiceClientName, userData, MessageType.USER_DATA);
+    public void saveUserData(String userDataMessage, Consumer<String> dataConsumer) {
+        Message outMsg = msClient.produceMessage(databaseServiceClientName, parseData(userDataMessage), MessageType.USER_DATA);
         consumerMap.put(outMsg.getId(), dataConsumer);
         msClient.sendMessage(outMsg);
     }
@@ -46,5 +51,11 @@ public class FrontendServiceImpl implements FrontendService {
             return Optional.empty();
         }
         return Optional.of(consumer);
+    }
+
+    @SneakyThrows
+    private String parseData(String userDataMessage) {
+        val userData = objectMapper.readValue(userDataMessage, MessageStr.class);
+        return objectMapper.writeValueAsString(userData.getUser());
     }
 }

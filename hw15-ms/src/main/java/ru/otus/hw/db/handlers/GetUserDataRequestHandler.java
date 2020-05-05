@@ -7,7 +7,7 @@ import ru.otus.hw.db.service.DBServiceWebUser;
 import ru.otus.hw.messagesystem.Message;
 import ru.otus.hw.messagesystem.MessageType;
 import ru.otus.hw.messagesystem.RequestHandler;
-import ru.otus.hw.messagesystem.Serializers;
+import ru.otus.hw.messagesystem.common.Serializers;
 
 import java.util.Optional;
 

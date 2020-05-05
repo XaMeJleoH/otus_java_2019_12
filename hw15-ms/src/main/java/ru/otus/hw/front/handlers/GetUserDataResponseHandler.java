@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import ru.otus.hw.front.FrontendService;
 import ru.otus.hw.messagesystem.Message;
 import ru.otus.hw.messagesystem.RequestHandler;
-import ru.otus.hw.messagesystem.Serializers;
+import ru.otus.hw.messagesystem.common.Serializers;
 
 import java.util.Optional;
 import java.util.UUID;

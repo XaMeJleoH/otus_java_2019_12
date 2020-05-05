@@ -2,9 +2,7 @@ package ru.otus.hw.messagesystem;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Repository;
-import org.springframework.stereotype.Service;
+import ru.otus.hw.messagesystem.common.Serializers;
 
 import java.util.Map;
 import java.util.Objects;
