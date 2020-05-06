@@ -1,0 +1,41 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Создание нового пользователя</title>
+    <script src="/webjars/jquery/jquery.min.js"></script>
+    <script src="/webjars/sockjs-client/sockjs.min.js"></script>
+    <script src="/webjars/stomp-websocket/stomp.min.js"></script>
+    <script src="/app.js"></script>
+</head>
+
+<h4>Создание нового пользователя</h4>
+
+<table>
+    <tr>
+        <th>Форма создания пользователя</th>
+    </tr>
+    <tr>
+        <td>
+            <form id="create-user" th:action="@{/create_user}" th:object="${user}" th:method="post"
+                  accept-charset="utf-8">
+                <input id="name_input" type="text" name="name" placeholder="Введите имя" th:value="${user.name}"
+                       required/>
+                <input id="age_input" type="number" name="age" placeholder="Введите возраст" th:value="${user.age}"
+                       required/>
+                <button id="send" type="submit" name="create">Создать</button>
+            </form>
+        </td>
+    </tr>
+</table>
+<table >
+    <thead>
+    <tr>
+        <th>Созданные пользователи</th>
+    </tr>
+    </thead>
+    <tbody id="userList"></tbody>
+</table>
+
+<a href="./">Перейти на главную страницу</a>
+
+</body>
+</html>
