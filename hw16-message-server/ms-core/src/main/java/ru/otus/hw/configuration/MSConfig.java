@@ -5,19 +5,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import ru.otus.hw.db.handlers.GetUserDataRequestHandler;
-import ru.otus.hw.db.service.DBServiceWebUser;
-import ru.otus.hw.front.FrontendService;
-import ru.otus.hw.front.FrontendServiceImpl;
-import ru.otus.hw.front.handlers.GetUserDataResponseHandler;
 import ru.otus.hw.messagesystem.*;
 
 import javax.annotation.PostConstruct;
 
 @Configuration
 public class MSConfig {
-    private static final String FRONTEND_SERVICE_CLIENT_NAME = "frontendService";
+ /*   private static final String FRONTEND_SERVICE_CLIENT_NAME = "frontendService";
     private static final String DATABASE_SERVICE_CLIENT_NAME = "databaseService";
     private final DBServiceWebUser dbServiceWebUser;
+
 
     @Autowired
     public MSConfig(DBServiceWebUser dbServiceWebUser) {
@@ -45,5 +42,6 @@ public class MSConfig {
         messageSystem().addClient(frontendMsClient);
         return frontendService;
     }
+*/
 
 }
