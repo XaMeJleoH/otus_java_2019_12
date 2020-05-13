@@ -2,7 +2,6 @@ package ru.otus.hw.db.cache;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Repository;
 
 import java.util.*;
 

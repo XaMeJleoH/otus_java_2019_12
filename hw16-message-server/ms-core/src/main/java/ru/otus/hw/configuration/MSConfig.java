@@ -4,7 +4,6 @@ import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import ru.otus.hw.db.handlers.GetUserDataRequestHandler;
 import ru.otus.hw.messagesystem.*;
 
 import javax.annotation.PostConstruct;
