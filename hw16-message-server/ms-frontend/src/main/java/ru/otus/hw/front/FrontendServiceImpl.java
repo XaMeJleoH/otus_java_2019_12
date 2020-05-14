@@ -3,6 +3,8 @@ package ru.otus.hw.front;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import ru.otus.hw.messagesystem.Message;
 import ru.otus.hw.messagesystem.MessageType;
 import ru.otus.hw.messagesystem.MsClient;
@@ -13,6 +15,7 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 
+@Component
 public class FrontendServiceImpl implements FrontendService {
     private static final Logger logger = LoggerFactory.getLogger(FrontendServiceImpl.class);
 
@@ -21,7 +24,7 @@ public class FrontendServiceImpl implements FrontendService {
     private final String databaseServiceClientName;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    public FrontendServiceImpl(MsClient msClient, String databaseServiceClientName) {
+    public FrontendServiceImpl(MsClient msClient, @Value("${db.name}") String databaseServiceClientName) {
         this.msClient = msClient;
         this.databaseServiceClientName = databaseServiceClientName;
     }

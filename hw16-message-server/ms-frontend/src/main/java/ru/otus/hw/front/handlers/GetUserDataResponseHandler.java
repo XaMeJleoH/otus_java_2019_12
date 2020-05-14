@@ -2,6 +2,8 @@ package ru.otus.hw.front.handlers;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import ru.otus.hw.front.FrontendService;
 import ru.otus.hw.messagesystem.Message;
 import ru.otus.hw.messagesystem.RequestHandler;
@@ -10,11 +12,13 @@ import ru.otus.hw.messagesystem.common.Serializers;
 import java.util.Optional;
 import java.util.UUID;
 
+@Component
 public class GetUserDataResponseHandler implements RequestHandler {
     private static final Logger logger = LoggerFactory.getLogger(GetUserDataResponseHandler.class);
 
     private final FrontendService frontendService;
 
+    @Autowired
     public GetUserDataResponseHandler(FrontendService frontendService) {
         this.frontendService = frontendService;
     }
