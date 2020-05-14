@@ -9,7 +9,7 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 @Slf4j
-public class AbstractSocketClient implements SocketClient {
+public abstract class AbstractSocketClient implements SocketClient {
 
     private String host;
     private int port;

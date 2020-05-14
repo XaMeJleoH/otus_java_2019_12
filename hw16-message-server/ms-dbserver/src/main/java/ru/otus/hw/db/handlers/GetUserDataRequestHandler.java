@@ -2,6 +2,7 @@ package ru.otus.hw.db.handlers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
+import org.springframework.stereotype.Component;
 import ru.otus.hw.db.model.User;
 import ru.otus.hw.db.service.DBServiceWebUser;
 import ru.otus.hw.messagesystem.Message;
@@ -11,6 +12,7 @@ import ru.otus.hw.messagesystem.common.Serializers;
 
 import java.util.Optional;
 
+@Component
 public class GetUserDataRequestHandler implements RequestHandler {
     private final DBServiceWebUser dbServiceWebUser;
     private final ObjectMapper objectMapper = new ObjectMapper();

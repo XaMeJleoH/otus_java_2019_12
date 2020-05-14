@@ -2,7 +2,7 @@ package ru.otus.hw.messagesystem;
 
 import lombok.extern.slf4j.Slf4j;
 import ru.otus.hw.messagesystem.common.Serializers;
-import ru.otus.hw.socket.AbstractSocketClient;
+import ru.otus.hw.socket.SocketClient;
 
 import java.util.Map;
 import java.util.Objects;
@@ -12,11 +12,11 @@ import java.util.concurrent.ConcurrentHashMap;
 public abstract class AbstractMsClient implements MsClient {
 
     private final String name;
-    private AbstractSocketClient socketClient;
+    private SocketClient socketClient;
     private final Map<String, RequestHandler> handlers = new ConcurrentHashMap<>();
 
 
-    public AbstractMsClient(String name, AbstractSocketClient socketClient) {
+    public AbstractMsClient(String name, SocketClient socketClient) {
         this.name = name;
         this.socketClient = socketClient;
     }

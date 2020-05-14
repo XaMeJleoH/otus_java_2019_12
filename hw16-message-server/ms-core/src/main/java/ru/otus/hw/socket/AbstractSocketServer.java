@@ -11,7 +11,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 @Slf4j
-public class AbstractSocketServer implements SocketServer {
+public abstract class AbstractSocketServer implements SocketServer {
 
     private MsClient msClient;
     private int port;
