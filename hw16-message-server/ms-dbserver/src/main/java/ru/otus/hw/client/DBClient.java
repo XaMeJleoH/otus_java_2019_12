@@ -5,8 +5,9 @@ import org.springframework.stereotype.Component;
 import ru.otus.hw.messagesystem.AbstractMsClient;
 import ru.otus.hw.socket.SocketClient;
 
+@Component
 public class DBClient extends AbstractMsClient {
-    public DBClient(String name, SocketClient databaseSocketClient) {
+    public DBClient(@Value("${db.name}") String name, SocketClient databaseSocketClient) {
         super(name, databaseSocketClient);
     }
 }
