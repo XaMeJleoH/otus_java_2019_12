@@ -12,7 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public abstract class AbstractMsClient implements MsClient {
 
     private final String name;
-    private SocketClient socketClient;
+    protected SocketClient socketClient;
     private final Map<String, RequestHandler> handlers = new ConcurrentHashMap<>();
 
 
