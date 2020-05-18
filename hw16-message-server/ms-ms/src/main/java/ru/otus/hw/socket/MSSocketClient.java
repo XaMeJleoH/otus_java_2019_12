@@ -24,7 +24,7 @@ public class MSSocketClient implements SocketClient {
         try (val socket = new Socket(host, port)) {
             val outputStream = new ObjectOutputStream(socket.getOutputStream());
             outputStream.writeObject(message);
-            log.info("Message was send {}", message);
+            log.info("Message was send {}, host={}, port={}", message, host, port);
 
             return true;
         }

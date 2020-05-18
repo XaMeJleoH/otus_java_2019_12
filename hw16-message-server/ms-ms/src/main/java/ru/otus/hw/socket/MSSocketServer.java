@@ -49,6 +49,8 @@ public class MSSocketServer implements SocketServer {
             val message = (Message) objectInputStream.readObject();
             messageSystem.newMessage(message);
             log.info("Message was received {}", message);
+        } catch (Exception ex) {
+            log.error("error", ex);
         }
     }
 

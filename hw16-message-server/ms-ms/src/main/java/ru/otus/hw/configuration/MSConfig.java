@@ -43,15 +43,6 @@ public class MSConfig {
         return new MessageSystemImpl();
     }
 
-    @Bean
-    public MsClient databaseMsClient(MessageSystem messageSystem){
-        clientDB.setHost(dbHost);
-        clientDB.setPort(dbPort);
-        val databaseMsClient = new MSClientImpl(dbName, clientDB);
-        messageSystem.addClient(databaseMsClient);
-
-        return databaseMsClient;
-    }
 
     @Bean
     public MsClient frontendService(MessageSystem messageSystem){
@@ -62,5 +53,15 @@ public class MSConfig {
         messageSystem.addClient(frontendMsClient);
 
         return frontendMsClient;
+    }
+
+    @Bean
+    public MsClient databaseMsClient(MessageSystem messageSystem){
+        clientDB.setHost(dbHost);
+        clientDB.setPort(dbPort);
+        val databaseMsClient = new MSClientImpl(dbName, clientDB);
+        messageSystem.addClient(databaseMsClient);
+
+        return databaseMsClient;
     }
 }

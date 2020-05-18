@@ -13,10 +13,15 @@ public class MSClientImpl extends AbstractMsClient {
         super(name, msSocketClient);
     }
 
-    @SneakyThrows
     @Override
     public void handle(Message msg) {
-        log.info("new message:{}", msg);
-        socketClient.newMessage(msg);
+        try {
+
+
+            log.info("new message:{}", msg);
+            socketClient.newMessage(msg);
+        } catch (Exception ex) {
+            log.error("msg:" + msg, ex);
+        }
     }
 }
