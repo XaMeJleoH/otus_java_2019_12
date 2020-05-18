@@ -10,7 +10,7 @@ import ru.otus.hw.socket.MSSocketServer;
 @AllArgsConstructor
 @SpringBootApplication
 public class Application implements ApplicationRunner {
-    private MSSocketServer frontendSocketServer;
+    private MSSocketServer msSocketServer;
 
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
@@ -18,6 +18,6 @@ public class Application implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) {
-        frontendSocketServer.initializeServer();
+        msSocketServer.initializeServer();
     }
 }
