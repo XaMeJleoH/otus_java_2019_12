@@ -6,7 +6,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import ru.otus.hw.db.model.User;
-import ru.otus.hw.db.service.DBServiceWebUser;
 import java.util.List;
 
 @Slf4j
@@ -16,12 +15,6 @@ public class UserController {
     private static final String INDEX_PAGE_TEMPLATE = "index";
     private static final String CREATE_USER_PAGE_TEMPLATE = "create_user";
     private static final String USERS_PAGE_TEMPLATE = "users";
-    private final DBServiceWebUser dbService;
-
-    public UserController(DBServiceWebUser dbService) {
-        this.dbService = dbService;
-    }
-
     @GetMapping("/")
     public String  startPageView() {
         return INDEX_PAGE_TEMPLATE;
@@ -29,8 +22,8 @@ public class UserController {
 
     @GetMapping({"/users"})
     public String userListView(Model model) {
-        List<User> users = dbService.getAllUsers();
-        model.addAttribute("users", users);
+        //List<User> users = dbService.getAllUsers();
+        model.addAttribute("users", new User());
         return USERS_PAGE_TEMPLATE;
     }
 
