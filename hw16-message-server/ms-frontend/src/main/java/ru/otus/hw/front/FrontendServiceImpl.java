@@ -1,6 +1,5 @@
 package ru.otus.hw.front;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,7 +21,6 @@ public class FrontendServiceImpl implements FrontendService {
     private final Map<UUID, Consumer<?>> consumerMap = new ConcurrentHashMap<>();
     private final MsClient msClient;
     private final String databaseServiceClientName;
-    private final ObjectMapper objectMapper = new ObjectMapper();
 
     public FrontendServiceImpl(MsClient msClient, @Value("${db.name}") String databaseServiceClientName) {
         this.msClient = msClient;

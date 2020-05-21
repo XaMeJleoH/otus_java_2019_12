@@ -10,7 +10,7 @@ import ru.otus.hw.socket.DBSocketServer;
 @AllArgsConstructor
 @SpringBootApplication
 public class Application implements ApplicationRunner {
-    private DBSocketServer dbSocketServer;
+    private final DBSocketServer dbSocketServer;
 
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);

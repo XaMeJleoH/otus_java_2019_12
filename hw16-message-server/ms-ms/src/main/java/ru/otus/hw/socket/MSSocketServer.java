@@ -21,7 +21,7 @@ public class MSSocketServer implements SocketServer {
     private String host;
     @Value("${ms.port}")
     private int port;
-    private MessageSystem messageSystem;
+    private final MessageSystem messageSystem;
 
     @Autowired
     public MSSocketServer(MessageSystem messageSystem) {
