@@ -4,8 +4,8 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import ru.otus.hw.ConnectionProperties;
 import ru.otus.hw.messagesystem.Message;
 import ru.otus.hw.messagesystem.MessageSystem;
 
@@ -17,10 +17,9 @@ import java.net.Socket;
 @Component
 public class MSSocketServer implements SocketServer {
 
-    @Value("${ms.host}")
-    private String host;
-    @Value("${ms.port}")
-    private int port;
+    @Autowired
+    private ConnectionProperties connectionProperties;
+
     private final MessageSystem messageSystem;
 
     @Autowired
@@ -32,7 +31,7 @@ public class MSSocketServer implements SocketServer {
     @SneakyThrows
     @Override
     public void initializeServer() {
-        try (val serverSocket = new ServerSocket(port)) {
+        try (val serverSocket = new ServerSocket(connectionProperties.getMs().getPort())) {
             while (!Thread.currentThread().isInterrupted()) {
                 log.info("waiting for client connection");
                 try (Socket clientSocket = serverSocket.accept()) {

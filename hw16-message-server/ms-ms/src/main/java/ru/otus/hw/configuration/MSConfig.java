@@ -2,34 +2,23 @@ package ru.otus.hw.configuration;
 
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import ru.otus.hw.ConnectionProperties;
 import ru.otus.hw.client.MSClientImpl;
 import ru.otus.hw.messagesystem.MessageSystem;
 import ru.otus.hw.messagesystem.MessageSystemImpl;
-import ru.otus.hw.messagesystem.MessageType;
 import ru.otus.hw.messagesystem.MsClient;
 import ru.otus.hw.socket.MSSocketClient;
 
 @Configuration
 public class MSConfig {
+
+    @Autowired
+    private ConnectionProperties connectionProperties;
+
     private final MSSocketClient clientFront;
     private final MSSocketClient clientDB;
-
-    @Value("${db.name}")
-    private String dbName;
-    @Value("${db.host}")
-    private String dbHost;
-    @Value("${db.port}")
-    private int dbPort;
-
-    @Value("${frontend.name}")
-    private String frontName;
-    @Value("${frontend.host}")
-    private String frontHost;
-    @Value("${frontend.port}")
-    private int frontPort;
 
     @Autowired
     public MSConfig(MSSocketClient clientForFront, MSSocketClient clientForDB) {
@@ -46,10 +35,10 @@ public class MSConfig {
 
     @Bean
     public MsClient frontendService(MessageSystem messageSystem){
-        clientFront.setHost(frontHost);
-        clientFront.setPort(frontPort);
+        clientFront.setHost(connectionProperties.getFrontend().getHost());
+        clientFront.setPort(connectionProperties.getFrontend().getPort());
 
-        val frontendMsClient = new MSClientImpl(frontName, clientFront);
+        val frontendMsClient = new MSClientImpl(connectionProperties.getFrontend().getName(), clientFront);
         messageSystem.addClient(frontendMsClient);
 
         return frontendMsClient;
@@ -57,9 +46,9 @@ public class MSConfig {
 
     @Bean
     public MsClient databaseMsClient(MessageSystem messageSystem){
-        clientDB.setHost(dbHost);
-        clientDB.setPort(dbPort);
-        val databaseMsClient = new MSClientImpl(dbName, clientDB);
+        clientDB.setHost(connectionProperties.getDb().getHost());
+        clientDB.setPort(connectionProperties.getDb().getPort());
+        val databaseMsClient = new MSClientImpl(connectionProperties.getDb().getName(), clientDB);
         messageSystem.addClient(databaseMsClient);
 
         return databaseMsClient;
