@@ -36,6 +36,7 @@
         <module>hw13-d-i</module>
         <module>hw14-jmm</module>
         <module>hw15-ms</module>
+        <module>hw16-message-server</module>
     </modules>
 
     <properties>
